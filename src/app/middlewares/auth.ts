@@ -32,7 +32,9 @@ const auth = (...requireRoles: TUserRole[]) => {
     const { emailOrPhone, role, iat } = decoded;
 
     //check if user is exist
-    const user = await User.isUserExistByCustomId(emailOrPhone);
+    const user = await User.findOne({
+      $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
+    });
 
     if (!user) {
       throw new AppError(status.NOT_FOUND, '🔍❓ User not Found');
