@@ -11,6 +11,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const user = await User.findOne({
     $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
   }).select('+password');
+  console.log(user);
   if (!user) {
     throw new AppError(status.NOT_FOUND, 'User not found!');
   }
@@ -32,6 +33,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const jwtPayload = {
     emailOrPhone: usedEmail ? user.email : user.phoneNumber,
     role: user.role,
+    id: user?._id,
   };
   // console.log('jwtPayload', jwtPayload);
 
@@ -67,7 +69,6 @@ const refreshToken = async (token: string) => {
   const user = await User.findOne({
     $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
   });
-  
 
   if (!user) {
     throw new AppError(status.NOT_FOUND, '🔍❓ User not Found');
