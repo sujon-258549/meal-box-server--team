@@ -1,40 +1,79 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { TUser, UserModel } from './user.interface';
+import { TAddress, TUser, UserModel } from './user.interface';
 import config from '../../config';
 
-// Mongoose schema
+const addressSchema = new Schema<TAddress>(
+  {
+    village: { type: String, required: true },
+    district: { type: String, required: true },
+    subDistrict: { type: String, required: true },
+    post: { type: String, required: true },
+    postCode: { type: String, required: true },
+  },
+  { _id: false },
+);
+
 const userSchema = new Schema<TUser>(
   {
-    name: {
+    fullName: {
       type: String,
       required: true,
-      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
+      trim: true,
     },
     password: {
       type: String,
       required: true,
-      select: false, // don't return password by default
+      minlength: 6,
+    },
+    dateOfBirth: {
+      type: String,
+      required: true,
     },
     role: {
       type: String,
-      enum: ['customer', 'meal-provider'],
+      enum: ['admin', 'mealProvider', 'customer'],
       default: 'customer',
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+      required: true,
+    },
+
+    phoneNumber: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    address: {
+      type: addressSchema,
+      required: true,
+    },
+    secondaryPhone: {
+      type: Number,
+      required: true,
+    },
+    isShop: {
+      type: Boolean,
+      default: false,
+    },
+    isBlock: {
+      type: Boolean,
+      default: false,
+    },
+    isDelete: {
+      type: Boolean,
+      default: false,
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
 // Hash password before saving
@@ -54,6 +93,13 @@ userSchema.statics.isPasswordMatched = async function (
   hashedPassword,
 ) {
   return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+userSchema.statics.isUserExistByEmailOrPhone = async function (emailOrPhone) {
+  const user = this;
+  return await user.findOne({
+    $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
+  });
 };
 
 const User = model<TUser, UserModel>('User', userSchema);

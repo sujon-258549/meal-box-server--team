@@ -34,6 +34,7 @@ const auth = (...requireRoles: TUserRole[]) => {
     //check if user is exist
     const user = await User.isUserExistByEmailOrPhone(emailOrPhone);
 
+
     if (!user) {
       throw new AppError(status.NOT_FOUND, '🔍❓ User not Found');
     }
