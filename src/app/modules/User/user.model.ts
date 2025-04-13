@@ -50,6 +50,7 @@ const userSchema = new Schema<TUser>(
     phoneNumber: {
       type: String,
       required: true,
+      unique: true,
     },
     address: {
       type: addressSchema,
