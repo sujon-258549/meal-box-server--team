@@ -30,6 +30,7 @@ const auth = (...requiredRole: TUserRole[]) => {
     }
 
     const user = await User.findOne({ _id: decoded.id });
+    // const user = await User.;
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'Your User Id is Invalid!');
