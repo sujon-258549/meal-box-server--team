@@ -95,6 +95,13 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
+userSchema.statics.isUserExistByEmailOrPhone = async function (emailOrPhone) {
+  const user = this;
+  return await user.findOne({
+    $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
+  });
+};
+
 const User = model<TUser, UserModel>('User', userSchema);
 
 export default User;
