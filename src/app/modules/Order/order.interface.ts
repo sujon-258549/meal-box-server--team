@@ -9,7 +9,7 @@ export interface TDayMenu {
   evening?: TOrderItem;
   night?: TOrderItem;
 }
-
+// order interface
 export interface TOrderMenu {
   customerId: string;
   paymentStatus: 'Pending' | 'Processing' | 'Completed' | 'Cancelled';
