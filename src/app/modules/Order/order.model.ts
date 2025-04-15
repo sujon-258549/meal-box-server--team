@@ -3,13 +3,14 @@ import { TDayMenu, TOrderMenu } from './order.interface';
 
 // Define Menu Item Schema
 const MenuItemSchema = new Schema({
-  menu: { type: String, required: true },
-  price: { type: Number, required: true },
+  menu: { type: String },
+  price: { type: Number },
+  description: { type: String },
 });
 
 // Define Daily Menu Schema
 const DayMenuSchema = new Schema<TDayMenu>({
-  day: { type: String, required: true },
+  day: { type: String },
   morning: { type: MenuItemSchema },
   evening: { type: MenuItemSchema },
   night: { type: MenuItemSchema },
@@ -28,7 +29,7 @@ const MenuSchema = new Schema<TOrderMenu>(
     total_price: { type: Number },
     orderId: { type: String, required: true },
     authorId: { type: String, required: true },
-    days: { type: [DayMenuSchema], required: true }, // Array of daily menus
+    orders: { type: [DayMenuSchema] }, // Array of daily menus
   },
   { timestamps: true },
 );

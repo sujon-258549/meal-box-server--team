@@ -1,6 +1,7 @@
 export interface TOrderItem {
-  menu: string;
-  price: number;
+  menu?: string;
+  price?: number;
+  description?: string;
 }
 
 export interface TDayMenu {
@@ -17,5 +18,5 @@ export interface TOrderMenu {
   total_price: number;
   orderId: string;
   authorId: string;
-  days: TDayMenu[]; // Array of daily menus
+  orders: TDayMenu[]; // Array of daily menus
 }
