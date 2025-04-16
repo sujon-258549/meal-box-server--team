@@ -2,12 +2,14 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';
-import httpStatus from 'http-status';
+import { status } from 'http-status';
 import MaleProvider from '../mealProvider/meal.provider.mode';
 import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
+import User from '../User/user.model';
+
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
@@ -20,7 +22,7 @@ const createOrderIntoDB = async (
   payload.orderId = id;
   const existMenu = await Menu.findById(id);
   if (!existMenu) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Author Id not Authorize');
+    throw new AppError(status.UNAUTHORIZED, 'Author Id not Authorize');
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days

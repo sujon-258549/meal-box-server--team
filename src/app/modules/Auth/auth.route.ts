@@ -7,7 +7,7 @@ import { USER_ROLE } from '../User/user.constant';
 
 const router = express.Router();
 
-router.get(
+router.post(
   '/login',
   ValidateRequest(AuthValidations.loginValidationSchema),
   AuthControllers.loginUser,
