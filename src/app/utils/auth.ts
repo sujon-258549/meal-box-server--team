@@ -14,7 +14,6 @@ import User from '../modules/User/user.model';
 const auth = (...requiredRole: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization as string;
-    console.log(token);
     let decoded;
     try {
       decoded = jwt.verify(
@@ -28,7 +27,7 @@ const auth = (...requiredRole: TUserRole[]) => {
     if (!decoded) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
     }
-
+    console.log({ decoded, token });
     const { emailOrPhone, role, iat } = decoded;
 
     // const user = await User.findOne({ _id: decoded.id });
