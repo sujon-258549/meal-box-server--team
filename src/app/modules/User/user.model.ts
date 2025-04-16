@@ -57,7 +57,7 @@ const userSchema = new Schema<TUser>(
       required: true,
     },
     secondaryPhone: {
-      type: Number,
+      type: String,
       required: true,
     },
     isShop: {
