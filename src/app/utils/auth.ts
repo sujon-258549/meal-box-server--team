@@ -14,21 +14,24 @@ import User from '../modules/User/user.model';
 const auth = (...requiredRole: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization as string;
-    console.log(token);
-    let decoded;
-    try {
-      decoded = jwt.verify(
-        token,
-        config.jwt_access_secret as string,
-      ) as JwtPayload;
-      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-    } catch (err) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
-    }
-    if (!decoded) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
-    }
-
+    console.log('token in auth guard', token);
+    // let decoded;
+    // try {
+    //   decoded = jwt.verify(
+    //     token,
+    //     config.jwt_access_secret as string,
+    //   ) as JwtPayload;
+    //   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // } catch (err) {
+    //   throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
+    // }
+    // if (!decoded) {
+    //   throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
+    // }
+    const decoded = jwt.verify(
+      token,
+      config.jwt_access_secret as string,
+    ) as JwtPayload;
     const { emailOrPhone, role, iat } = decoded;
 
     // const user = await User.findOne({ _id: decoded.id });
