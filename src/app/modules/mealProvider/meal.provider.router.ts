@@ -21,7 +21,24 @@ router.post(
   //   auth(UserRole.user),
   mealProviderController.createMealProvider,
 );
-
+router.get('/', mealProviderController.getAllMealProvider);
+router.get(
+  '/my-meal-provider',
+  auth(USER_ROLE.mealProvider),
+  mealProviderController.getMyMealProvider,
+);
+router.put(
+  '/update-mealProvider',
+  auth(USER_ROLE.mealProvider),
+  //   ValidateRequest(mealProviderValidation.maleProviderSchema),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  //   auth(UserRole.user),
+  mealProviderController.updateMealProvider,
+);
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);
 
 export const mealProviderRouter = router;
