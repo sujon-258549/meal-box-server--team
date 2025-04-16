@@ -21,6 +21,7 @@ router.post(
   //   auth(UserRole.user),
   mealProviderController.createMealProvider,
 );
+
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);
 
 export const mealProviderRouter = router;
