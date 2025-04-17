@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { orderServes } from './order.serves';
 import sendResponse from '../../utils/sendResponse';
+
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const { id } = req.params;
@@ -14,6 +15,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const findMyOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await orderServes.findMyOrderIntoDB(req?.user);
   sendResponse(res, {

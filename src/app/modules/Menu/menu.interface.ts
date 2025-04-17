@@ -10,6 +10,6 @@ export interface IDayMenu {
 }
 
 export interface TMenu {
-  day: IDayMenu[];
+  meals: IDayMenu[];
   author_id: string;
 }

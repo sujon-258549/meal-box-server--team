@@ -1,5 +1,4 @@
 import status from 'http-status';
-import { TUser } from '../User/user.interface';
 import User from '../User/user.model';
 import { TLoginUser } from './auth.interface';
 import config from '../../config';
@@ -9,6 +8,7 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { sendEmail } from '../../utils/sendEmail';
+
 const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const { emailOrPhone, password } = loginInfo;
   const user = await User.findOne({

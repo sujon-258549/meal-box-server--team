@@ -18,7 +18,7 @@ const CreateMealProviderIntoDB = async (
   if (existId) {
     throw new AppError(501, 'This user already shop create');
   }
-  console.log(file, user);
+  console.log('from meal provider create service', file, user);
   const path = file?.path;
   const name = payload.shopName;
   const shopLogo = await sendImageCloudinary(name, path);

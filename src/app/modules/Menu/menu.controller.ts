@@ -33,6 +33,7 @@ const findAllMenu = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+
 const findSingleMenu = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await menuServices.findSingleMenu(id); //

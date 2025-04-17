@@ -18,6 +18,10 @@ const routerModules = [
     route: UserRoutes,
   },
   {
+    path: '/customers',
+    route: orderRouter,
+  },
+  {
     path: '/meal-provider',
     route: mealProviderRouter,
   },

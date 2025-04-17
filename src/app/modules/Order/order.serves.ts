@@ -2,12 +2,12 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';
-import httpStatus from 'http-status';
-import MaleProvider from '../mealProvider/meal.provider.mode';
+import { status } from 'http-status';
 import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
+
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
@@ -20,11 +20,11 @@ const createOrderIntoDB = async (
   payload.orderId = id;
   const existMenu = await Menu.findById(id);
   if (!existMenu) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Author Id not Authorize');
+    throw new AppError(status.UNAUTHORIZED, 'Author Id not Authorize');
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days
-  const totalPrice = payload.days.reduce((acc, day) => {
+  const totalPrice = payload.orders.reduce((acc, day) => {
     return (
       acc +
       (day.morning?.price || 0) +
@@ -45,7 +45,7 @@ const createOrderIntoDB = async (
   if (res) {
     result = await sslServices.insertPayment({
       total_amount: totalPrice,
-      //  @ts-expect-error
+      //  @ts-expect-error: tran_id is not defined in the type but is required for SSL services
       tran_id: bigIntNumber,
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -12,6 +12,7 @@ const auth = (...requireRoles: TUserRole[]) => {
   // console.log(requireAuth);
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
+    console.log('token', token);
 
     //check if the token is sent from client
     if (!token) {
@@ -33,7 +34,6 @@ const auth = (...requireRoles: TUserRole[]) => {
 
     //check if user is exist
     const user = await User.isUserExistByEmailOrPhone(emailOrPhone);
-
 
     if (!user) {
       throw new AppError(status.NOT_FOUND, '🔍❓ User not Found');
