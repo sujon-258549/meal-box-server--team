@@ -14,7 +14,7 @@ import User from '../modules/User/user.model';
 const auth = (...requiredRole: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization as string;
-    console.log('token in auth guard', token);
+    // console.log('token in auth guard', token);
     // let decoded;
     // try {
     //   decoded = jwt.verify(

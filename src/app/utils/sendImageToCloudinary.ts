@@ -2,12 +2,13 @@ import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import config from '../config';
 
 // Cloudinary config
 cloudinary.config({
-  cloud_name: 'dkdibsanz',
-  api_key: '558721645753651',
-  api_secret: 'Ky5Ga3DuiaRU77goqQem_bEdWQU',
+  cloud_name: config.cloud_name,
+  api_key: config.api_key,
+  api_secret: config.api_secret,
 });
 
 // Function to upload image to Cloudinary
