@@ -62,7 +62,11 @@ const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  const meal = new queryBuilder(Order.find({ authorId: user.id }), query);
+  const meal = new queryBuilder(Order.find({ authorId: user.id }), query)
+    .sort()
+    .filter()
+    .paginate()
+    .fields();
   const meta = await meal.countTotal();
   const data = await meal.modelQuery;
   return { meta, data };

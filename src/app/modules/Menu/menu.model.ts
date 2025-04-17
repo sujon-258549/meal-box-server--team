@@ -16,7 +16,12 @@ const DayMenuSchema = new Schema<IDayMenu>({
 const MenuSchema = new Schema<TMenu>(
   {
     meals: { type: [DayMenuSchema], required: true },
-    author_id: { type: String, required: true },
+    author_id: { type: String, required: true, ref: 'User' },
+    shopId: {
+      type: String,
+      required: true,
+      ref: 'MaleProvider',
+    },
   },
   { timestamps: true },
 );

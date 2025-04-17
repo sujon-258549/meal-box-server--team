@@ -4,21 +4,38 @@ import { TMenu } from './menu.interface';
 import { Menu } from './menu.model';
 import AppError from '../../errors/AppError';
 import queryBuilder from '../../builder/queryBuilder';
+import MaleProvider from '../mealProvider/meal.provider.mode';
 
 const createMenuForDayIntoDB = async (payload: TMenu, user: JwtPayload) => {
-  const authorId = user?.id;
-  payload.author_id = authorId;
-  const existDay = await Menu.findOne({
-    author_id: authorId,
+  // 1. Check if meal provider exists
+  const mealProvider = await MaleProvider.findOne({
+    authorShopId: user.id,
   });
-  if (existDay) {
+
+  if (!mealProvider) {
+    throw new AppError(404, 'Meal provider not found');
+  }
+
+  // 2. Check if menu already exists for this day
+  const existingMenu = await Menu.findOne({
+    author_id: user.id,
+  });
+
+  if (existingMenu) {
     throw new AppError(
-      400,
-      'Menu already exists for this day. Please update the existing menu.',
+      409, // Conflict status code
+      `Menu already exists. Please update the existing menu.`,
     );
   }
 
-  const result = await Menu.create(payload);
+  // 3. Create new menu
+  const newMenuData = {
+    ...payload,
+    shopId: mealProvider._id,
+    author_id: user.id,
+  };
+
+  const result = await Menu.create(newMenuData);
   return result;
 };
 const findAllMenuIntoDB = async (
@@ -26,7 +43,14 @@ const findAllMenuIntoDB = async (
   query: Record<string, unknown>,
 ) => {
   //   const result = await Restaurant.find({ id: user.author_id });
-  const restorenet = new queryBuilder(Menu.find(), query);
+  const restorenet = new queryBuilder(
+    Menu.find().populate('author_id').populate('shopId'),
+    query,
+  )
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
   const meta = await restorenet.countTotal();
   const data = await restorenet.modelQuery;
   return { meta, data };
