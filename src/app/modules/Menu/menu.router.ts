@@ -11,12 +11,18 @@ router.post(
   menuController.createMenuForDay,
 );
 router.get('/', menuController.findAllMenu);
+router.get('/my-menu', auth(USER_ROLE.mealProvider), menuController.findMyMenu);
 router.get(
   '/:id',
   auth(USER_ROLE.mealProvider, USER_ROLE.customer),
   menuController.findSingleMenu,
 );
-router.get('/my-menu', auth(USER_ROLE.mealProvider), menuController.findMyMenu);
+router.get(
+  '/my-menus',
+  auth(USER_ROLE.mealProvider),
+  menuController.findMyMenu,
+);
+
 router.put(
   '/my-menu',
   auth(USER_ROLE.mealProvider),

@@ -31,6 +31,9 @@ const findAllMenuIntoDB = async (
   const data = await restorenet.modelQuery;
   return { meta, data };
 };
+// const findMyMenu = async (payload) => {
+//   console.log(payload);
+// };
 const findSingleMenu = async (id: string) => {
   const result = await Menu.findById(id);
   return result;
@@ -43,6 +46,7 @@ const findMyMenu = async (user: JwtPayload) => {
   });
   return result;
 };
+
 const updateMyMenu = async (payload: Partial<TMenu>, user: JwtPayload) => {
   const result = await Menu.findOneAndUpdate(
     { author_id: user?.id },

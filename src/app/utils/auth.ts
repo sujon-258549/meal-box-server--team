@@ -27,7 +27,6 @@ const auth = (...requiredRole: TUserRole[]) => {
     if (!decoded) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
     }
-    console.log({ decoded, token });
     const { emailOrPhone, role, iat } = decoded;
 
     // const user = await User.findOne({ _id: decoded.id });

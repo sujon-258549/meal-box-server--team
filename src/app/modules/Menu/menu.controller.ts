@@ -13,6 +13,16 @@ const createMenuForDay = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const findMyMenu = catchAsync(async (req: Request, res: Response) => {
+  const result = await menuServices.findMyMenu(req.user); //
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All Menu retrieved successfully',
+    data: result,
+  });
+});
+
 const findAllMenu = catchAsync(async (req: Request, res: Response) => {
   const result = await menuServices.findAllMenuIntoDB(req?.user, req?.query); //
   sendResponse(res, {
@@ -33,15 +43,7 @@ const findSingleMenu = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-const findMyMenu = catchAsync(async (req: Request, res: Response) => {
-  const result = await menuServices.findMyMenu(req?.user);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'My menu retrieved successfully',
-    data: result,
-  });
-});
+
 const updateMyMenu = catchAsync(async (req: Request, res: Response) => {
   const result = await menuServices.updateMyMenu(req.body, req?.user); //
   sendResponse(res, {
