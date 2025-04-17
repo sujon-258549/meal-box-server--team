@@ -15,6 +15,17 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const findUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.findUserIntoDB(req?.user);
+  // console.log(result);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
+});
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.updateUserIntoDB(req.body, req.user);
   sendResponse(res, {
@@ -28,4 +39,5 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 export const UserControllers = {
   createUser,
   updateUser,
+  findUser,
 };

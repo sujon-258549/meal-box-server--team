@@ -7,6 +7,10 @@ const createUserIntoDB = async (userData: TUser) => {
   const newUser = await User.create(userData);
   return newUser;
 };
+const findUserIntoDB = async (userData: JwtPayload) => {
+  const result = await User.findById(userData?.id);
+  return result;
+};
 const updateUserIntoDB = async (userData: Partial<TUser>, user: JwtPayload) => {
   console.log(userData);
   const updatedUser = await User.findByIdAndUpdate(user.id, userData, {
@@ -19,4 +23,5 @@ const updateUserIntoDB = async (userData: Partial<TUser>, user: JwtPayload) => {
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
+  findUserIntoDB,
 };
