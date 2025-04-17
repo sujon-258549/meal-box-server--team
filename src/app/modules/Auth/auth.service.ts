@@ -1,5 +1,4 @@
 import status from 'http-status';
-import { TUser } from '../User/user.interface';
 import User from '../User/user.model';
 import { TLoginUser } from './auth.interface';
 import config from '../../config';

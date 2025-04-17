@@ -3,12 +3,10 @@ import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';
 import { status } from 'http-status';
-import MaleProvider from '../mealProvider/meal.provider.mode';
 import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
-import User from '../User/user.model';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
@@ -47,7 +45,7 @@ const createOrderIntoDB = async (
   if (res) {
     result = await sslServices.insertPayment({
       total_amount: totalPrice,
-      //  @ts-expect-error
+      //  @ts-expect-error: tran_id is not defined in the type but is required for SSL services
       tran_id: bigIntNumber,
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
