@@ -11,7 +11,7 @@ const router = Router();
 //   orderController.createOrder,
 // );
 router.post(
-  '/order/:id',
+  '/create-order/:id',
   auth(USER_ROLE.customer),
   orderController.createOrder,
 );

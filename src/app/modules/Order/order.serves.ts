@@ -24,7 +24,7 @@ const createOrderIntoDB = async (
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days
-  const totalPrice = payload.orders.reduce((acc, day) => {
+  const totalPrice = payload.orderData.reduce((acc, day) => {
     return (
       acc +
       (day.morning?.price || 0) +

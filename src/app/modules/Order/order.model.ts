@@ -29,7 +29,7 @@ const MenuSchema = new Schema<TOrderMenu>(
     total_price: { type: Number },
     orderId: { type: String, required: true },
     authorId: { type: String, required: true },
-    orders: { type: [DayMenuSchema] }, // Array of daily menus
+    orderData: { type: [DayMenuSchema] }, // Array of daily menus
   },
   { timestamps: true },
 );
