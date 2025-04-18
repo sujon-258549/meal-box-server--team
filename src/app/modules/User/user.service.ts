@@ -16,7 +16,21 @@ const updateUserIntoDB = async (userData: Partial<TUser>, user: JwtPayload) => {
   return updatedUser;
 };
 
+const getMeFromDB = async (emailOrPhone: string, role: string) => {
+  let result = null;
+  if (role === 'customer') {
+    result = await User.findOne({ email: emailOrPhone }).select('-password');
+  }
+
+  if (role === 'mealProvider') {
+    result = await User.findOne({ email: emailOrPhone }).select('-password');
+  }
+
+  return result;
+};
+
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
+  getMeFromDB,
 };

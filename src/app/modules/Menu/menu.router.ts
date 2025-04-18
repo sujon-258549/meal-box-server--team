@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   '/create-menu',
-  auth(USER_ROLE.mealProvider),
+  auth('mealProvider'),
   menuController.createMenuForDay,
 );
 router.get('/', menuController.findAllMenu);
@@ -17,6 +17,7 @@ router.get(
   menuController.findSingleMenu,
 );
 router.get('/my-menu', auth(USER_ROLE.mealProvider), menuController.findMyMenu);
+
 router.put(
   '/my-menu',
   auth(USER_ROLE.mealProvider),

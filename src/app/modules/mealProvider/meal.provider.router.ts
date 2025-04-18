@@ -24,12 +24,12 @@ router.post(
 router.get('/', mealProviderController.getAllMealProvider);
 router.get(
   '/my-meal-provider',
-  auth(USER_ROLE.mealProvider),
+  auth('mealProvider'),
   mealProviderController.getMyMealProvider,
 );
 router.put(
   '/update-mealProvider',
-  auth(USER_ROLE.mealProvider),
+  auth('mealProvider'),
   //   ValidateRequest(mealProviderValidation.maleProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {

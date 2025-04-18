@@ -3,7 +3,6 @@ import { UserControllers } from './user.controller';
 import ValidateRequest from '../../middlewares/validateRequest';
 import { UserValidations } from './userValidation';
 import auth from '../../utils/auth';
-import { USER_ROLE } from './user.constant';
 
 const router = express.Router();
 
@@ -14,8 +13,14 @@ router.post(
 );
 router.put(
   '/update-user',
-  auth(USER_ROLE.admin, USER_ROLE.mealProvider, USER_ROLE.customer),
+  auth('admin', 'mealProvider', 'customer'),
   UserControllers.updateUser,
+);
+
+router.get(
+  '/me',
+  auth('admin', 'customer', 'mealProvider'),
+  UserControllers.getMe,
 );
 
 export const UserRoutes = router;

@@ -27,9 +27,10 @@ const auth = (...requireRoles: TUserRole[]) => {
     // ) as JwtPayload;
 
     const decoded = verifyToken(token, config.jwt_access_secret as string);
-    console.log(decoded);
+    console.log('decoded from auth.ts', decoded);
 
     // const role = decoded.role;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { emailOrPhone, role, iat } = decoded;
 
     //check if user is exist

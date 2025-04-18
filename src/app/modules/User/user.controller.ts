@@ -25,7 +25,21 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const { emailOrPhone, role } = req.user;
+
+  const result = await UserServices.getMeFromDB(emailOrPhone, role);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'User is Retrieved successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   updateUser,
+  getMe,
 };

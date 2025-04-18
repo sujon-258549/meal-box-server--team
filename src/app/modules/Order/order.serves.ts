@@ -58,6 +58,7 @@ const findMyOrderIntoDB = async (user: JwtPayload) => {
   const result = await Order.find({ customerId: user.id });
   return result;
 };
+
 const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
