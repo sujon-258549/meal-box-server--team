@@ -17,12 +17,13 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 });
 
 const findMyOrder = catchAsync(async (req: Request, res: Response) => {
-  const result = await orderServes.findMyOrderIntoDB(req?.user);
+  const result = await orderServes.findMyOrderIntoDB(req?.user, req.query);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'My Order retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 const MealProviderReceivedOrder = catchAsync(

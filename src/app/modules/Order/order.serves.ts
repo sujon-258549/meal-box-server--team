@@ -24,13 +24,11 @@ const createOrderIntoDB = async (
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days
-  const totalPrice = payload.orderData.reduce((acc, day) => {
-    return (
-      acc +
-      (day.morning?.price || 0) +
-      (day.evening?.price || 0) +
-      (day.night?.price || 0)
-    );
+  console.log(payload.orders);
+  const totalPrice = payload.orders.reduce((acc, day) => {
+    const dayMealsTotal =
+      day.meals?.reduce((mealAcc, meal) => mealAcc + (meal.price || 0), 0) || 0;
+    return acc + dayMealsTotal;
   }, 0);
   payload.total_price = totalPrice;
   //   transition id
@@ -54,16 +52,37 @@ const createOrderIntoDB = async (
   return result; // Include total price in the response
 };
 
-const findMyOrderIntoDB = async (user: JwtPayload) => {
-  const result = await Order.find({ customerId: user.id });
-  return result;
+const findMyOrderIntoDB = async (
+  user: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  const myOrder = new queryBuilder(
+    Order.find({ customerId: user.id })
+      .populate('customerId')
+      .populate('orderId')
+      .populate('authorId'),
+    query,
+  )
+    .sort()
+    .filter()
+    .paginate()
+    .fields();
+  const meta = await myOrder.countTotal();
+  const data = await myOrder.modelQuery;
+  return { meta, data };
 };
 
 const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  const meal = new queryBuilder(Order.find({ authorId: user.id }), query)
+  const meal = new queryBuilder(
+    Order.find({ authorId: user.id })
+      .populate('customerId')
+      .populate('orderId')
+      .populate('authorId'),
+    query,
+  )
     .sort()
     .filter()
     .paginate()
