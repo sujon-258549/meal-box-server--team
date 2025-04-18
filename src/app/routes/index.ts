@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { UserRoutes } from '../modules/User/user.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
-import { mealProviderRouter } from '../modules/mealProvider/meal.provider.router';
-import { menuRouter } from '../modules/Menu/menu.router';
+import { MealProviderRouters } from '../modules/mealProvider/meal.provider.router';
+import { MenuRouters } from '../modules/Menu/menu.router';
 import { SSLRoutes } from '../modules/sslCommeriz/sslCommeriz.router';
 import { orderRouter } from '../modules/Order/order.router';
 
@@ -23,11 +23,11 @@ const routerModules = [
   },
   {
     path: '/meal-provider',
-    route: mealProviderRouter,
+    route: MealProviderRouters,
   },
   {
     path: '/menu',
-    route: menuRouter,
+    route: MenuRouters,
   },
   {
     path: '/ssl',

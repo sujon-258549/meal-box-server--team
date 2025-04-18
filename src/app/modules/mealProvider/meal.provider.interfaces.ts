@@ -1,4 +1,4 @@
-export interface TMaleProvider {
+export interface TMealProvider {
   shopName: string;
   shopAddress: string;
   authorShopId: string;

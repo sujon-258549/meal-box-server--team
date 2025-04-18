@@ -4,14 +4,15 @@ import { Request, Response } from 'express';
 import sendResponse from '../../utils/sendResponse';
 import { mealProviderServes } from './meal.provider.serves';
 import catchAsync from '../../utils/catchAsync';
+
 const createMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const result = await mealProviderServes.CreateMealProviderIntoDB(
     data,
     req.file,
-
     req?.user,
   );
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -46,6 +47,7 @@ const updateMealProvider = catchAsync(async (req: Request, res: Response) => {
     req.file,
     req?.user,
   );
+  // console.log(req.file, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -1,36 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { JwtPayload } from 'jsonwebtoken';
-// import { TJwtPayload } from '../types';
 import { TMenu } from './menu.interface';
 import { Menu } from './menu.model';
 import AppError from '../../errors/AppError';
 import queryBuilder from '../../builder/queryBuilder';
-import MaleProvider from '../mealProvider/meal.provider.mode';
+import MealProvider from '../mealProvider/meal.provider.mode';
+import { sendImageCloudinary } from '../../utils/uploadImageCloudinary';
+import status from 'http-status';
+import { searchableFields } from './menu.const';
 
-const createMenuForDayIntoDB = async (payload: TMenu, user: JwtPayload) => {
-  // 1. Check if meal provider exists
-  const mealProvider = await MaleProvider.findOne({
+const createMenuForDayIntoDB = async (
+  payload: TMenu,
+  file: any,
+  user: JwtPayload,
+) => {
+  const mealProvider = await MealProvider.findOne({
     authorShopId: user.id,
   });
 
   if (!mealProvider) {
-    throw new AppError(404, 'Meal provider not found');
+    throw new AppError(status.NOT_FOUND, 'Meal provider not found');
   }
 
-  // 2. Check if menu already exists for this day
   const existingMenu = await Menu.findOne({
     author_id: user.id,
   });
+  console.log(existingMenu);
 
   if (existingMenu) {
     throw new AppError(
-      409, // Conflict status code
+      status.CONFLICT,
       `Menu already exists. Please update the existing menu.`,
     );
   }
 
-  // 3. Create new menu
+  const name = file.filename;
+  const path = file?.path;
+  const imageUrl = (await sendImageCloudinary(name, path)) as {
+    secure_url: string;
+  };
+
   const newMenuData = {
     ...payload,
+    menuImage: imageUrl?.secure_url,
     shopId: mealProvider._id,
     author_id: user.id,
   };
@@ -42,7 +54,6 @@ const findAllMenuIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  //   const result = await Restaurant.find({ id: user.author_id });
   const restorenet = new queryBuilder(
     Menu.find().populate('author_id').populate('shopId'),
     query,
@@ -56,16 +67,13 @@ const findAllMenuIntoDB = async (
   const data = await restorenet.modelQuery;
   return { meta, data };
 };
-// const findMyMenu = async (payload) => {
-//   console.log(payload);
-// };
+
 const findSingleMenu = async (id: string) => {
   const result = await Menu.findById(id);
   return result;
 };
 
 const findMyMenu = async (user: JwtPayload) => {
-  console.log({ user });
   const result = await Menu.findOne({
     author_id: user?.id,
   })
@@ -75,11 +83,9 @@ const findMyMenu = async (user: JwtPayload) => {
 };
 
 const updateMyMenu = async (payload: Partial<TMenu>, user: JwtPayload) => {
-  const result = await Menu.findOneAndUpdate(
-    { author_id: user?.id },
-    payload,
-    { new: true }, // return the updated document
-  );
+  const result = await Menu.findOneAndUpdate({ author_id: user?.id }, payload, {
+    new: true,
+  });
 
   if (!result) {
     throw new AppError(404, 'Menu not found for this user.');
@@ -88,7 +94,7 @@ const updateMyMenu = async (payload: Partial<TMenu>, user: JwtPayload) => {
   return result;
 };
 
-export const menuServices = {
+export const MenuServices = {
   createMenuForDayIntoDB,
   findAllMenuIntoDB,
   findMyMenu,
