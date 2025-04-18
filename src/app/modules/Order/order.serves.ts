@@ -46,7 +46,7 @@ const createOrderIntoDB = async (
       //  @ts-expect-error: tran_id is not defined in the type but is required for SSL services
       tran_id: bigIntNumber,
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     result = { paymentUrl: result };
   }
   return result; // Include total price in the response
