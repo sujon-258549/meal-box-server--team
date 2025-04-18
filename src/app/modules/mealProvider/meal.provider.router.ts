@@ -7,6 +7,7 @@ import auth from '../../utils/auth';
 // import ValidateRequest from '../../middlewares/validateRequest';
 // import { mealProviderValidation } from './meal.provider.validaction';
 import { upload } from '../../utils/sendImageToCloudinary';
+import { USER_ROLE } from '../User/user.constant';
 const router = Router();
 
 router.post(
@@ -24,12 +25,12 @@ router.post(
 router.get('/', mealProviderController.getAllMealProvider);
 router.get(
   '/my-meal-provider',
-  auth(USER_ROLE.mealProvider),
+  auth('mealProvider'),
   mealProviderController.getMyMealProvider,
 );
 router.put(
   '/update-mealProvider',
-  auth(USER_ROLE.mealProvider),
+  auth('mealProvider'),
   //   ValidateRequest(mealProviderValidation.maleProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import httpStatus from 'http-status';
+import { status } from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { orderServes } from './order.serves';
 import sendResponse from '../../utils/sendResponse';
@@ -9,7 +9,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await orderServes.createOrderIntoDB(data, req?.user, id);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Order create successfully',
     data: result,
@@ -17,19 +17,20 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 });
 
 const findMyOrder = catchAsync(async (req: Request, res: Response) => {
-  const result = await orderServes.findMyOrderIntoDB(req?.user);
+  const result = await orderServes.findMyOrderIntoDB(req?.user, req.query);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: status.OK,
     success: true,
     message: 'My Order retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 const MealProviderReceivedOrder = catchAsync(
   async (req: Request, res: Response) => {
     const result = await orderServes.MealProviderIntoDB(req?.user, req.query);
     sendResponse(res, {
-      statusCode: httpStatus.CREATED,
+      statusCode: status.CREATED,
       success: true,
       message: 'My retrieved meal successfully',
       meta: result.meta,
