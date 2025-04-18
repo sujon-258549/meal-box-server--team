@@ -11,6 +11,11 @@ router.post(
   ValidateRequest(UserValidations.createUserValidationSchema),
   UserControllers.createUser,
 );
+router.get(
+  '/',
+  auth(USER_ROLE.admin, USER_ROLE.mealProvider, USER_ROLE.customer),
+  UserControllers.findUser,
+);
 router.put(
   '/update-user',
   auth('admin', 'mealProvider', 'customer'),

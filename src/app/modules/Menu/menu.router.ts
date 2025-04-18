@@ -11,6 +11,7 @@ router.post(
   menuController.createMenuForDay,
 );
 router.get('/', menuController.findAllMenu);
+router.get('/my-menu', auth(USER_ROLE.mealProvider), menuController.findMyMenu);
 router.get(
   '/:id',
   auth(USER_ROLE.mealProvider, USER_ROLE.customer),

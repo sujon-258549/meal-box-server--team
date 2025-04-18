@@ -1,7 +1,8 @@
 export interface TOrderItem {
-  menu?: string;
-  price?: number;
+  menu: string;
+  price: number;
   description?: string;
+  time?: string; // Added based on your sample data
 }
 
 export interface TDayMenu {
@@ -18,5 +19,5 @@ export interface TOrderMenu {
   total_price: number;
   orderId: string;
   authorId: string;
-  orders: TDayMenu[]; // Array of daily menus
+  orderData: TDayMenu[]; // Array of daily menus
 }

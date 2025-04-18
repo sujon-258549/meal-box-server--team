@@ -4,9 +4,17 @@ import auth from '../../middlewares/auth';
 
 const router = Router();
 
-router.post('/order', auth('customer'), orderController.createOrder);
-
-router.get('/my-order', auth('customer'), orderController.findMyOrder);
+// router.post(
+//   '/order',
+//   auth(USER_ROLE.customer),
+//   orderController.createOrder,
+// );
+router.post(
+  '/create-order/:id',
+  auth(USER_ROLE.customer),
+  orderController.createOrder,
+);
+router.get('/my-order', auth(USER_ROLE.customer), orderController.findMyOrder);
 
 router.get(
   '/',

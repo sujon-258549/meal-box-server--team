@@ -24,7 +24,7 @@ const createOrderIntoDB = async (
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days
-  const totalPrice = payload.orders.reduce((acc, day) => {
+  const totalPrice = payload.orderData.reduce((acc, day) => {
     return (
       acc +
       (day.morning?.price || 0) +
@@ -63,7 +63,11 @@ const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  const meal = new queryBuilder(Order.find({ authorId: user.id }), query);
+  const meal = new queryBuilder(Order.find({ authorId: user.id }), query)
+    .sort()
+    .filter()
+    .paginate()
+    .fields();
   const meta = await meal.countTotal();
   const data = await meal.modelQuery;
   return { meta, data };

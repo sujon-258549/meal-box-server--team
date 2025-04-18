@@ -7,6 +7,7 @@ import auth from '../../utils/auth';
 // import ValidateRequest from '../../middlewares/validateRequest';
 // import { mealProviderValidation } from './meal.provider.validaction';
 import { upload } from '../../utils/sendImageToCloudinary';
+import { USER_ROLE } from '../User/user.constant';
 const router = Router();
 
 router.post(
