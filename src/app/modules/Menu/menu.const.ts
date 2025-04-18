@@ -1,4 +1,4 @@
-const searchableFields = [
+export const searchableFields = [
   'author_id.phoneNumber',
   'author_id.secondaryPhone',
   'shopId.shopName',

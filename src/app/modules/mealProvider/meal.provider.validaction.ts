@@ -19,8 +19,8 @@ const operatingHoursSchema = z.object({
     .nonempty('At least one open day is required'),
 });
 
-// Main TMaleProvider Schema
-const maleProviderSchema = z.object({
+// Main TMealProvider Schema
+const mealProviderSchema = z.object({
   body: z.object({
     shopName: z.string().min(1, 'Shop name is required'),
     shopAddress: z.string().min(1, 'Shop address is required'),
@@ -44,4 +44,4 @@ const maleProviderSchema = z.object({
   }),
 });
 
-export const mealProviderValidation = { maleProviderSchema };
+export const mealProviderValidation = { mealProviderSchema };

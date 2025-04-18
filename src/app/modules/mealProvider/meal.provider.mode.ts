@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-import { TMaleProvider } from './meal.provider.interfaces';
+import { TMealProvider } from './meal.provider.interfaces';
 
-const providerSchema = new Schema<TMaleProvider>({
+const providerSchema = new Schema<TMealProvider>({
   shopName: { type: String, required: true },
   authorShopId: { type: String, required: true, unique: true },
   shopAddress: { type: String, required: true },
@@ -29,9 +29,9 @@ const providerSchema = new Schema<TMaleProvider>({
 });
 
 // Create and export the model
-const MaleProvider = mongoose.model<TMaleProvider>(
-  'MaleProvider',
+const MealProvider = mongoose.model<TMealProvider>(
+  'MealProvider',
   providerSchema,
 );
 
-export default MaleProvider;
+export default MealProvider;

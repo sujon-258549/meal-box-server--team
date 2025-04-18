@@ -7,13 +7,12 @@ import auth from '../../utils/auth';
 // import ValidateRequest from '../../middlewares/validateRequest';
 // import { mealProviderValidation } from './meal.provider.validaction';
 import { upload } from '../../utils/sendImageToCloudinary';
-import { USER_ROLE } from '../User/user.constant';
 const router = Router();
 
 router.post(
   '/create-mealProvider',
   auth('customer'),
-  //   ValidateRequest(mealProviderValidation.maleProviderSchema),
+  //   ValidateRequest(mealProviderValidation.mealProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
@@ -31,7 +30,7 @@ router.get(
 router.put(
   '/update-mealProvider',
   auth('mealProvider'),
-  //   ValidateRequest(mealProviderValidation.maleProviderSchema),
+  //   ValidateRequest(mealProviderValidation.mealProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
@@ -42,4 +41,4 @@ router.put(
 );
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);
 
-export const mealProviderRouter = router;
+export const MealProviderRouters = router;
