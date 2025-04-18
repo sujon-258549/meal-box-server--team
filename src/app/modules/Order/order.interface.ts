@@ -1,4 +1,4 @@
-export interface TOrderItem {
+export interface IMealItem {
   menu: string;
   price: number;
   description?: string;
@@ -7,9 +7,7 @@ export interface TOrderItem {
 
 export interface TDayMenu {
   day?: string; // Example: "Saturday"
-  morning?: TOrderItem;
-  evening?: TOrderItem;
-  night?: TOrderItem;
+  meals: IMealItem[];
 }
 // order interface
 export interface TOrderMenu {
@@ -19,5 +17,5 @@ export interface TOrderMenu {
   total_price: number;
   orderId: string;
   authorId: string;
-  orderData: TDayMenu[]; // Array of daily menus
+  orders: TDayMenu[]; // Array of daily menus
 }

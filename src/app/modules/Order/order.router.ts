@@ -12,7 +12,7 @@ const router = Router();
 // );
 router.post(
   '/create-order/:id',
-  auth(USER_ROLE.customer),
+  auth(USER_ROLE.customer, USER_ROLE.mealProvider),
   orderController.createOrder,
 );
 router.get('/my-order', auth(USER_ROLE.customer), orderController.findMyOrder);

@@ -48,6 +48,7 @@ const findAllMenuIntoDB = async (
     query,
   )
     .filter()
+    .search(searchableFields)
     .sort()
     .fields()
     .paginate();
@@ -67,7 +68,9 @@ const findMyMenu = async (user: JwtPayload) => {
   console.log({ user });
   const result = await Menu.findOne({
     author_id: user?.id,
-  });
+  })
+    .populate('author_id')
+    .populate('shopId');
   return result;
 };
 

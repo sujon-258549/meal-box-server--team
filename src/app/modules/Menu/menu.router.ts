@@ -17,11 +17,6 @@ router.get(
   auth(USER_ROLE.mealProvider, USER_ROLE.customer),
   menuController.findSingleMenu,
 );
-router.get(
-  '/my-menus',
-  auth(USER_ROLE.mealProvider),
-  menuController.findMyMenu,
-);
 
 router.put(
   '/my-menu',
