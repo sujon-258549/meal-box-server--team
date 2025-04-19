@@ -1,18 +1,15 @@
 import { NextFunction, Request, Response, Router } from 'express';
-// import auth from '../../middlewares/auth';
-// import { upload } from '../../utils/uploadImageCloudinary';
 import auth from '../../utils/auth';
-// import { USER_ROLE } from '../User/user.constant';
-// import ValidateRequest from '../../middlewares/validateRequest';
-// import { mealProviderValidation } from './meal.provider.validaction';
 import { upload } from '../../utils/sendImageToCloudinary';
-import { MealProviderControllers } from './mealProvider.controllers';
+import { MealProviderControllers } from './mealProvider.controller';
+import ValidateRequest from '../../middlewares/validateRequest';
+import { MealProviderValidations } from './mealProvider.validation';
 const router = Router();
 
 router.post(
   '/create-mealProvider',
   auth('customer'),
-  //   ValidateRequest(mealProviderValidation.mealProviderSchema),
+    ValidateRequest(MealProviderValidations.mealProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);

@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+import httpStatus, { status } from 'http-status';
 
 import { Request, Response } from 'express';
 import sendResponse from '../../utils/sendResponse';
@@ -14,7 +14,7 @@ const createMealProvider = catchAsync(async (req: Request, res: Response) => {
   );
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Meal Provider created successfully',
     data: result,
@@ -24,7 +24,7 @@ const getAllMealProvider = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const result = await MealProviderServices.getAllMealProviderIntoDB(query);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: status.OK,
     success: true,
     message: 'Meal retrieved successfully',
     data: result,
