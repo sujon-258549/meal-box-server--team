@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { mealProviderController } from './meal.provider.controller';
 // import auth from '../../middlewares/auth';
 // import { upload } from '../../utils/uploadImageCloudinary';
 import auth from '../../utils/auth';
@@ -7,6 +6,7 @@ import auth from '../../utils/auth';
 // import ValidateRequest from '../../middlewares/validateRequest';
 // import { mealProviderValidation } from './meal.provider.validaction';
 import { upload } from '../../utils/sendImageToCloudinary';
+import { MealProviderControllers } from './mealProvider.controllers';
 const router = Router();
 
 router.post(
@@ -19,13 +19,13 @@ router.post(
     next();
   },
   //   auth(UserRole.user),
-  mealProviderController.createMealProvider,
+  MealProviderControllers.createMealProvider,
 );
-router.get('/', mealProviderController.getAllMealProvider);
+router.get('/', MealProviderControllers.getAllMealProvider);
 router.get(
   '/my-meal-provider',
   auth('mealProvider'),
-  mealProviderController.getMyMealProvider,
+  MealProviderControllers.getMyMealProvider,
 );
 router.put(
   '/update-mealProvider',
@@ -37,7 +37,7 @@ router.put(
     next();
   },
   //   auth(UserRole.user),
-  mealProviderController.updateMealProvider,
+  MealProviderControllers.updateMealProvider,
 );
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);
 
