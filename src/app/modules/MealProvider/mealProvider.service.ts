@@ -7,7 +7,7 @@ import { USER_ROLE } from '../User/user.constant';
 import User from '../User/user.model';
 
 import { JwtPayload } from 'jsonwebtoken';
-import MealProvider from './mealProvider.model';
+import MealProvider from './mealProvider.mode';
 import { TMealProvider } from './mealProvider.interface';
 
 const createMealProviderIntoDB = async (
