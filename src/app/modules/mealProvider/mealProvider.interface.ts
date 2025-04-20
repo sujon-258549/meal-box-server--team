@@ -15,7 +15,7 @@ export interface TMealProvider {
     linkedin?: string;
   };
   rating?: number;
-  isActive: boolean;
+  // isActive: boolean;
   operatingHours: {
     open: string;
     close: string;
