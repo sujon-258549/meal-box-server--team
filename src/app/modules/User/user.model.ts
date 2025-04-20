@@ -11,7 +11,7 @@ const addressSchema = new Schema<TAddress>(
     post: { type: String, required: true },
     postCode: { type: String, required: true },
   },
-  { _id: false },
+  // { _id: false },
 );
 
 const userSchema = new Schema<TUser>(
