@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserRoutes } from '../modules/User/user.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
-import { MealProviderRouters } from '../modules/mealProvider/meal.provider.router';
+import { MealProviderRouters } from '../modules/MealProvider/mealProvider.route';
 import { MenuRouters } from '../modules/Menu/menu.router';
 import { SSLRoutes } from '../modules/sslCommeriz/sslCommeriz.router';
 import { orderRouter } from '../modules/Order/order.router';

@@ -3,7 +3,7 @@ import { TUser } from './user.interface';
 import User from './user.model';
 
 const createUserIntoDB = async (userData: TUser) => {
-  console.log(userData);
+  console.log('from service file', userData);
   const newUser = await User.create(userData);
   return newUser;
 };
