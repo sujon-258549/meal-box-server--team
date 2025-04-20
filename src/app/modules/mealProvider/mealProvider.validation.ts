@@ -44,4 +44,4 @@ const mealProviderSchema = z.object({
   }),
 });
 
-export const mealProviderValidation = { mealProviderSchema };
+export const mealProviderValidations = { mealProviderSchema };
