@@ -3,7 +3,7 @@ import auth from '../../utils/auth';
 import { upload } from '../../utils/sendImageToCloudinary';
 import { MealProviderControllers } from './mealProvider.controller';
 import ValidateRequest from '../../middlewares/validateRequest';
-import { MealProviderValidations } from './mealProvider.validation';
+import { mealProviderValidations } from './mealProvider.validation';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.post(
     req.body = JSON.parse(req.body.data);
     next();
   },
-  ValidateRequest(MealProviderValidations.mealProviderSchema),
+  ValidateRequest(mealProviderValidations.mealProviderSchema),
   MealProviderControllers.createMealProvider,
 );
 
