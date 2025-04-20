@@ -26,6 +26,19 @@ const findMyOrder = catchAsync(async (req: Request, res: Response) => {
     data: result.data,
   });
 });
+
+const getSingleOrder = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const { id } = req.params;
+  const result = await orderServes.getSingleOrderFromDB(user, id);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'My Order retrieved successfully',
+    data: result,
+  });
+});
+
 const MealProviderReceivedOrder = catchAsync(
   async (req: Request, res: Response) => {
     const result = await orderServes.MealProviderIntoDB(req?.user, req.query);
@@ -43,4 +56,5 @@ export const orderController = {
   createOrder,
   MealProviderReceivedOrder,
   findMyOrder,
+  getSingleOrder,
 };

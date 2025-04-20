@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export interface IMealItem {
   menu: string;
   price: number;
@@ -18,4 +20,5 @@ export interface TOrderMenu {
   orderId: string;
   authorId: string;
   orders: TDayMenu[]; // Array of daily menus
+  shopId: Types.ObjectId;
 }
