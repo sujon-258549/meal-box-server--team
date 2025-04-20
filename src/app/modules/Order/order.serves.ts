@@ -3,12 +3,10 @@ import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';
 import { status } from 'http-status';
-import MaleProvider from '../mealProvider/meal.provider.mode';
 import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
-import User from '../User/user.model';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
@@ -26,13 +24,11 @@ const createOrderIntoDB = async (
   }
   payload.authorId = existMenu.author_id;
   //   Calculate the total price into days
+  console.log(payload.orders);
   const totalPrice = payload.orders.reduce((acc, day) => {
-    return (
-      acc +
-      (day.morning?.price || 0) +
-      (day.evening?.price || 0) +
-      (day.night?.price || 0)
-    );
+    const dayMealsTotal =
+      day.meals?.reduce((mealAcc, meal) => mealAcc + (meal.price || 0), 0) || 0;
+    return acc + dayMealsTotal;
   }, 0);
   payload.total_price = totalPrice;
   //   transition id
@@ -47,24 +43,50 @@ const createOrderIntoDB = async (
   if (res) {
     result = await sslServices.insertPayment({
       total_amount: totalPrice,
-      //  @ts-expect-error
+      //  @ts-expect-error: tran_id is not defined in the type but is required for SSL services
       tran_id: bigIntNumber,
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     result = { paymentUrl: result };
   }
   return result; // Include total price in the response
 };
 
-const findMyOrderIntoDB = async (user: JwtPayload) => {
-  const result = await Order.find({ customerId: user.id });
-  return result;
+const findMyOrderIntoDB = async (
+  user: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  const myOrder = new queryBuilder(
+    Order.find({ customerId: user.id })
+      .populate('customerId')
+      .populate('orderId')
+      .populate('authorId'),
+    query,
+  )
+    .sort()
+    .filter()
+    .paginate()
+    .fields();
+  const meta = await myOrder.countTotal();
+  const data = await myOrder.modelQuery;
+  return { meta, data };
 };
+
 const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  const meal = new queryBuilder(Order.find({ authorId: user.id }), query);
+  const meal = new queryBuilder(
+    Order.find({ authorId: user.id })
+      .populate('customerId')
+      .populate('orderId')
+      .populate('authorId'),
+    query,
+  )
+    .sort()
+    .filter()
+    .paginate()
+    .fields();
   const meta = await meal.countTotal();
   const data = await meal.modelQuery;
   return { meta, data };

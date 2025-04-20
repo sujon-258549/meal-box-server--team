@@ -10,16 +10,16 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   const { accessToken, refreshToken } = result;
   console.log(refreshToken);
   res.cookie('refreshToken', refreshToken, {
-    secure: config.NODE_ENV === 'production',
+    secure: config.NODE_ENV === 'production' ? true : false,
     httpOnly: true,
-    sameSite: 'none',
+    sameSite: true,
     maxAge: 1000 * 60 * 60 * 24 * 365,
   });
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'User logged in successfully',
-    data: { accessToken },
+    data: { accessToken, refreshToken },
   });
 });
 

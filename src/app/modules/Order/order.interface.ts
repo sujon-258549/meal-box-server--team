@@ -1,14 +1,13 @@
-export interface TOrderItem {
-  menu?: string;
-  price?: number;
+export interface IMealItem {
+  menu: string;
+  price: number;
   description?: string;
+  time?: string; // Added based on your sample data
 }
 
 export interface TDayMenu {
   day?: string; // Example: "Saturday"
-  morning?: TOrderItem;
-  evening?: TOrderItem;
-  night?: TOrderItem;
+  meals: IMealItem[];
 }
 // order interface
 export interface TOrderMenu {

@@ -1,26 +1,33 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import auth from '../../utils/auth';
-import { USER_ROLE } from '../User/user.constant';
-import { menuController } from './menu.controller';
+import { MenuControllers } from './menu.controller';
+import { upload } from '../../utils/sendImageToCloudinary';
+import ValidateRequest from '../../middlewares/validateRequest';
+import { MenuValidations } from './menu.validation';
 
 const router = Router();
 
 router.post(
   '/create-menu',
-  auth(USER_ROLE.mealProvider),
-  menuController.createMenuForDay,
-);
-router.get('/', menuController.findAllMenu);
-router.get(
-  '/:id',
-  auth(USER_ROLE.mealProvider, USER_ROLE.customer),
-  menuController.findSingleMenu,
-);
-router.get('/my-menu', auth(USER_ROLE.mealProvider), menuController.findMyMenu);
-router.put(
-  '/my-menu',
-  auth(USER_ROLE.mealProvider),
-  menuController.updateMyMenu,
+  auth('mealProvider'),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  ValidateRequest(MenuValidations.menuValidationSchema),
+  MenuControllers.createMenuForDay,
 );
 
-export const menuRouter = router;
+router.get('/', MenuControllers.findAllMenu);
+router.get('/my-menu', auth('mealProvider'), MenuControllers.findMyMenu);
+router.get(
+  '/:id',
+  auth('mealProvider', 'customer'),
+  MenuControllers.findSingleMenu,
+);
+router.get('/my-menu', auth('mealProvider'), MenuControllers.findMyMenu);
+
+router.put('/my-menu', auth('mealProvider'), MenuControllers.updateMyMenu);
+
+export const MenuRouters = router;

@@ -12,4 +12,7 @@ export interface IDayMenu {
 export interface TMenu {
   meals: IDayMenu[];
   author_id: string;
+  shopId: string;
+  menuImage: string;
+  // mealsHash: string;
 }

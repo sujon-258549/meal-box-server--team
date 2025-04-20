@@ -78,11 +78,9 @@ const userSchema = new Schema<TUser>(
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // doc
   // hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
+  this.password = await bcrypt.hash(
+    this.password,
     Number(config.bcrypt_salt_rounds),
   );
   next();
@@ -96,8 +94,8 @@ userSchema.statics.isPasswordMatched = async function (
 };
 
 userSchema.statics.isUserExistByEmailOrPhone = async function (emailOrPhone) {
-  const user = this;
-  return await user.findOne({
+  // const user = this;
+  return await this.findOne({
     $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
   });
 };

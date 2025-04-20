@@ -6,20 +6,19 @@ const MenuItemSchema = new Schema({
   menu: { type: String },
   price: { type: Number },
   description: { type: String },
+  time: { type: String },
 });
 
 // Define Daily Menu Schema
 const DayMenuSchema = new Schema<TDayMenu>({
   day: { type: String },
-  morning: { type: MenuItemSchema },
-  evening: { type: MenuItemSchema },
-  night: { type: MenuItemSchema },
+  meals: { type: [MenuItemSchema] },
 });
 
 // Define Main Menu Schema
-const MenuSchema = new Schema<TOrderMenu>(
+const OrderSchema = new Schema<TOrderMenu>(
   {
-    customerId: { type: String, required: true },
+    customerId: { type: String, required: true, ref: 'User' },
     transactionId: { type: String || Number },
     paymentStatus: {
       type: String,
@@ -27,12 +26,12 @@ const MenuSchema = new Schema<TOrderMenu>(
       default: 'Pending',
     },
     total_price: { type: Number },
-    orderId: { type: String, required: true },
-    authorId: { type: String, required: true },
+    orderId: { type: String, required: true, ref: 'Menu' },
+    authorId: { type: String, required: true, ref: 'User' },
     orders: { type: [DayMenuSchema] }, // Array of daily menus
   },
   { timestamps: true },
 );
 
 // Define Mongoose Model
-export const Order = mongoose.model<TOrderMenu>('order', MenuSchema);
+export const Order = mongoose.model<TOrderMenu>('order', OrderSchema);
