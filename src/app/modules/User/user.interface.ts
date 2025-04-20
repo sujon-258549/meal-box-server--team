@@ -1,29 +1,22 @@
-// export type TUser = {
-//   name: string;
-//   email: string;
-//   phoneNumber: string;
-//   password: string;
-//   role: 'customer' | 'mealProvider' | 'admin';
-// };
 import { Model } from 'mongoose';
 import { USER_ROLE } from './user.constant';
-export interface TAddress {
+export type TAddress = {
   village: string;
   district: string;
   subDistrict: string;
   post: string;
   postCode: string;
-}
+};
 export type TUser = {
-  fullName: string; //full name
+  fullName: string;
   email: string;
   password: string;
   role: 'admin' | 'mealProvider' | 'customer';
   address: TAddress;
-  dateOfBirth: string; // corrected spelling from "dateOfBarth"
+  dateOfBirth: string;
   gender: 'male' | 'female' | 'other';
   phoneNumber: string;
-  secondaryPhone?: string; // made optional if not always required
+  secondaryPhone?: string;
   isShop?: boolean;
   isBlock?: boolean;
   isDelete?: boolean;
