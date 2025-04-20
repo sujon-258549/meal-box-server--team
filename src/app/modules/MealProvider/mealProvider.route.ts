@@ -4,20 +4,21 @@ import { upload } from '../../utils/sendImageToCloudinary';
 import { MealProviderControllers } from './mealProvider.controller';
 import ValidateRequest from '../../middlewares/validateRequest';
 import { MealProviderValidations } from './mealProvider.validation';
+
 const router = Router();
 
 router.post(
   '/create-mealProvider',
   auth('customer'),
-    ValidateRequest(MealProviderValidations.mealProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();
   },
-  //   auth(UserRole.user),
+  ValidateRequest(MealProviderValidations.mealProviderSchema),
   MealProviderControllers.createMealProvider,
 );
+
 router.get('/', MealProviderControllers.getAllMealProvider);
 router.get(
   '/my-meal-provider',

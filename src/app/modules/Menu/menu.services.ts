@@ -25,7 +25,6 @@ const createMenuForDayIntoDB = async (
   const existingMenu = await Menu.findOne({
     author_id: user.id,
   });
-  console.log(existingMenu);
 
   if (existingMenu) {
     throw new AppError(

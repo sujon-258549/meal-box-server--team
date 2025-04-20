@@ -7,14 +7,15 @@ import { USER_ROLE } from '../User/user.constant';
 import User from '../User/user.model';
 
 import { JwtPayload } from 'jsonwebtoken';
-import MealProvider from './mealProvider.mode';
 import { TMealProvider } from './mealProvider.interface';
+import MealProvider from './mealProvider.model';
 
 const createMealProviderIntoDB = async (
   payload: TMealProvider,
   file: any,
   user: JwtPayload,
 ) => {
+  console.log(payload);
   const existId = await MealProvider.findOne({ authorShopId: user?.id });
   if (existId) {
     throw new AppError(status.CONFLICT, 'This user already shop create');

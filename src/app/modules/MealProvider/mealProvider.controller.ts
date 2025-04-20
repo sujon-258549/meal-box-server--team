@@ -7,6 +7,7 @@ import { MealProviderServices } from './mealProvider.service';
 
 const createMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
+  console.log('provider data from controller', data);
   const result = await MealProviderServices.createMealProviderIntoDB(
     data,
     req.file,
