@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { TMealProvider } from './meal.provider.interfaces';
+import { TMealProvider } from './mealProvider.interface';
 
 const providerSchema = new Schema<TMealProvider>({
   shopName: { type: String, required: true },

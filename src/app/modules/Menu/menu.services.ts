@@ -4,7 +4,7 @@ import { TMenu } from './menu.interface';
 import { Menu } from './menu.model';
 import AppError from '../../errors/AppError';
 import queryBuilder from '../../builder/queryBuilder';
-import MealProvider from '../mealProvider/meal.provider.mode';
+import MealProvider from '../mealProvider/mealProvider.model';
 import { sendImageCloudinary } from '../../utils/uploadImageCloudinary';
 import status from 'http-status';
 import { searchableFields } from './menu.const';
