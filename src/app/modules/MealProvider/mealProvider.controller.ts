@@ -1,20 +1,21 @@
-import httpStatus from 'http-status';
+import httpStatus, { status } from 'http-status';
 
 import { Request, Response } from 'express';
 import sendResponse from '../../utils/sendResponse';
-import { mealProviderServes } from './meal.provider.serves';
 import catchAsync from '../../utils/catchAsync';
+import { MealProviderServices } from './mealProvider.service';
 
 const createMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await mealProviderServes.CreateMealProviderIntoDB(
+  console.log('provider data from controller', data);
+  const result = await MealProviderServices.createMealProviderIntoDB(
     data,
     req.file,
     req?.user,
   );
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Meal Provider created successfully',
     data: result,
@@ -22,9 +23,9 @@ const createMealProvider = catchAsync(async (req: Request, res: Response) => {
 });
 const getAllMealProvider = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
-  const result = await mealProviderServes.GetAllMealProviderIntoDB(query);
+  const result = await MealProviderServices.getAllMealProviderIntoDB(query);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: status.OK,
     success: true,
     message: 'Meal retrieved successfully',
     data: result,
@@ -32,7 +33,7 @@ const getAllMealProvider = catchAsync(async (req: Request, res: Response) => {
 });
 const getMyMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req?.user;
-  const result = await mealProviderServes.getMyMealProviderIntoDB(data);
+  const result = await MealProviderServices.getMyMealProviderIntoDB(data);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -42,7 +43,7 @@ const getMyMealProvider = catchAsync(async (req: Request, res: Response) => {
 });
 const updateMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await mealProviderServes.UpdateMealProviderIntoDB(
+  const result = await MealProviderServices.updateMealProviderIntoDB(
     data,
     req.file,
     req?.user,
@@ -56,7 +57,7 @@ const updateMealProvider = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const mealProviderController = {
+export const MealProviderControllers = {
   createMealProvider,
   getMyMealProvider,
   getAllMealProvider,
