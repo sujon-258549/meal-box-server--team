@@ -4,11 +4,10 @@ import { TMenu } from './menu.interface';
 import { Menu } from './menu.model';
 import AppError from '../../errors/AppError';
 import queryBuilder from '../../builder/queryBuilder';
-
-import { sendImageCloudinary } from '../../utils/uploadImageCloudinary';
 import status from 'http-status';
 import { searchableFields } from './menu.constant';
 import MealProvider from '../mealProvider/mealProvider.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 
 
@@ -38,7 +37,7 @@ const createMenuForDayIntoDB = async (
 
   const name = file.filename;
   const path = file?.path;
-  const imageUrl = (await sendImageCloudinary(name, path)) as {
+  const imageUrl = (await sendImageToCloudinary(name, path)) as {
     secure_url: string;
   };
 

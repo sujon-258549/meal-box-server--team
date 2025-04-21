@@ -2,13 +2,13 @@
 import status from 'http-status';
 import queryBuilder from '../../builder/queryBuilder';
 import AppError from '../../errors/AppError';
-import { sendImageCloudinary } from '../../utils/uploadImageCloudinary';
 import { USER_ROLE } from '../User/user.constant';
 import User from '../User/user.model';
 
 import { JwtPayload } from 'jsonwebtoken';
 import { TMealProvider } from './mealProvider.interface';
 import MealProvider from '../mealProvider/mealProvider.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createMealProviderIntoDB = async (
   payload: TMealProvider,
@@ -23,7 +23,7 @@ const createMealProviderIntoDB = async (
   const path = file?.path;
   const name = payload.shopName;
 
-  const imageUrl = (await sendImageCloudinary(name, path)) as {
+  const imageUrl = (await sendImageToCloudinary(name, path)) as {
     secure_url: string;
   };
 
@@ -64,7 +64,7 @@ const updateMealProviderIntoDB = async (
       throw new Error('Shop name and file path are required');
     }
 
-    const cloudinaryResult = (await sendImageCloudinary(name, path)) as {
+    const cloudinaryResult = (await sendImageToCloudinary(name, path)) as {
       secure_url: string;
     };
 

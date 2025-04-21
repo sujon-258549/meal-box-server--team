@@ -1,6 +1,9 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { TUser } from './user.interface';
 import User from './user.model';
+import status from 'http-status';
+import AppError from '../../errors/AppError';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createUserIntoDB = async (userData: TUser) => {
   console.log('from service file', userData);
@@ -29,8 +32,36 @@ const getMeFromDB = async (emailOrPhone: string, role: string) => {
   return result;
 };
 
+export const setImageIntoUser = async (
+  file: Express.Multer.File,
+  user: JwtPayload,
+) => {
+  const { emailOrPhone } = user;
+
+  const isExistUser = await User.findOne({
+    $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
+  });
+
+  if (!isExistUser) {
+    return new AppError(status.NOT_FOUND, 'User not found');
+  }
+  if (file) {
+    const path = file?.path;
+    const name = isExistUser.fullName.replace(/\s+/g, '_').toLowerCase();
+
+    const { secure_url } = (await sendImageToCloudinary(name, path)) as {
+      secure_url: string;
+    };
+    console.log('secure_url', secure_url);
+    isExistUser.profileImage = secure_url;
+    return await isExistUser.save();
+  }
+  return isExistUser;
+};
+
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
   getMeFromDB,
+  setImageIntoUser,
 };
