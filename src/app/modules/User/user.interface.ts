@@ -20,6 +20,7 @@ export type TUser = {
   isShop?: boolean;
   isBlock?: boolean;
   isDelete?: boolean;
+  profileImage: string;
 };
 
 export interface UserModel extends Model<TUser> {

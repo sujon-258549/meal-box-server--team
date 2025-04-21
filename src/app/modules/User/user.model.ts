@@ -69,6 +69,7 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
+    profileImage: { type: String, default: 'https://ibb.co.com/NnCmw5Jj' },
   },
   { timestamps: true },
 );
