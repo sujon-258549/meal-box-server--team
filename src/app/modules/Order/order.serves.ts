@@ -6,7 +6,7 @@ import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
-import MealProvider from '../MealProvider/mealProvider.model';
+import MealProvider from '../mealProvider/mealProvider.model';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
