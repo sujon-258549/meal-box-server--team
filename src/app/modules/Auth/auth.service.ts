@@ -57,11 +57,6 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
 };
 
 const refreshToken = async (token: string) => {
-  //check the given token is verified
-  // const decoded = jwt.verify(
-  //   token,
-  //   config.jwt_refresh_secret as string,
-  // ) as JwtPayload;
 
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 

@@ -52,7 +52,9 @@ export const setImageIntoUser = async (
     const { secure_url } = (await sendImageToCloudinary(name, path)) as {
       secure_url: string;
     };
-    console.log('secure_url', secure_url);
+    if (!secure_url) {
+      return new AppError(status.INTERNAL_SERVER_ERROR, 'Image not found');
+    }
     isExistUser.profileImage = secure_url;
     return await isExistUser.save();
   }

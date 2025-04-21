@@ -23,6 +23,8 @@ export type TUser = {
   profileImage: string;
 };
 
+
+
 export interface UserModel extends Model<TUser> {
   isUserExistByEmailOrPhone(emailOrPhone: string): Promise<TUser>;
   isPasswordMatched(
