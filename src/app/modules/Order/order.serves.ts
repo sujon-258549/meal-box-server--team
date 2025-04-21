@@ -8,7 +8,6 @@ import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
 import MealProvider from '../mealProvider/mealProvider.model';
 
-
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
@@ -70,7 +69,8 @@ const findMyOrderIntoDB = async (
     Order.find({ customerId: user.id })
       .populate('customerId')
       .populate('orderId')
-      .populate('authorId'),
+      .populate('authorId')
+      .populate('shopId'),
     query,
   )
     .sort()
@@ -84,7 +84,11 @@ const findMyOrderIntoDB = async (
 
 const getSingleOrderFromDB = async (userInfo: JwtPayload, orderId: string) => {
   console.log(userInfo, orderId);
-  const res = await Order.findOne({ _id: orderId });
+  const res = await Order.findOne({ _id: orderId })
+    .populate('customerId')
+    .populate('orderId')
+    .populate('authorId')
+    .populate('shopId');
   console.log(res);
   return res;
 };
@@ -97,7 +101,9 @@ const MealProviderIntoDB = async (
     Order.find({ authorId: user.id })
       .populate('customerId')
       .populate('orderId')
-      .populate('authorId'),
+      .populate('authorId')
+      .populate('shopId'),
+
     query,
   )
     .sort()

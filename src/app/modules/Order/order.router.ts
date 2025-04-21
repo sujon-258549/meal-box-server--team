@@ -24,7 +24,7 @@ router.get(
 
 router.get(
   '/',
-  auth('mealProvider'),
+  auth('customer', 'mealProvider'),
   orderController.MealProviderReceivedOrder,
 );
 

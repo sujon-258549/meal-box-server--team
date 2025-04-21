@@ -27,6 +27,7 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
       minlength: 6,
+      select: false,
     },
     dateOfBirth: {
       type: String,
@@ -75,12 +76,28 @@ const userSchema = new Schema<TUser>(
 );
 
 // Hash password before saving
+// userSchema.pre('save', async function (next) {
+//   // hashing password and save into DB
+//   this.password = await bcrypt.hash(
+//     this.password,
+//     Number(config.bcrypt_salt_rounds),
+//   );
+//   next();
+// });
+
 userSchema.pre('save', async function (next) {
-  // hashing password and save into DB
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_rounds),
-  );
+  // Only hash if password exists and has been modified
+  if (this.isModified('password') && this.password) {
+    this.password = await bcrypt.hash(
+      this.password,
+      Number(config.bcrypt_salt_rounds),
+    );
+  }
+  next();
+});
+
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
   next();
 });
 
