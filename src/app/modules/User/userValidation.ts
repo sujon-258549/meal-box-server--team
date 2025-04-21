@@ -32,11 +32,11 @@ const updateUserValidationSchema = z.object({
   body: z.object({
     fullName: z.string().optional(),
     dateOfBirth: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), {
-      message: 'Invalid date format',
-    })
-    .optional(),
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), {
+        message: 'Invalid date format',
+      })
+      .optional(),
     gender: z.enum(['male', 'female', 'other']).optional(),
     phoneNumber: z.string().optional(),
     secondaryPhone: z.string().optional(),

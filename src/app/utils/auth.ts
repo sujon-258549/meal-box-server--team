@@ -32,7 +32,7 @@ const auth = (...requiredRole: TUserRole[]) => {
       token,
       config.jwt_access_secret as string,
     ) as JwtPayload;
-    const { emailOrPhone, role, } = decoded;
+    const { emailOrPhone, role } = decoded;
 
     // const user = await User.findOne({ _id: decoded.id });
     //check if user is exist
