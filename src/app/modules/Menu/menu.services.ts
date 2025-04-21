@@ -8,7 +8,9 @@ import queryBuilder from '../../builder/queryBuilder';
 import { sendImageCloudinary } from '../../utils/uploadImageCloudinary';
 import status from 'http-status';
 import { searchableFields } from './menu.constant';
-import MealProvider from '../MealProvider/mealProvider.model';
+import MealProvider from '../mealProvider/mealProvider.model';
+
+
 
 const createMenuForDayIntoDB = async (
   payload: TMenu,

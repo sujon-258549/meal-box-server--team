@@ -8,7 +8,7 @@ import User from '../User/user.model';
 
 import { JwtPayload } from 'jsonwebtoken';
 import { TMealProvider } from './mealProvider.interface';
-import MealProvider from './mealProvider.model';
+import MealProvider from '../mealProvider/mealProvider.model';
 
 const createMealProviderIntoDB = async (
   payload: TMealProvider,
