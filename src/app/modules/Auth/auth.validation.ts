@@ -15,7 +15,12 @@ const refreshTokenValidationSchema = z.object({
   }),
 });
 
+const forgetPasswordValidationSchema = z.object({
+  body: z.object({}),
+});
+
 export const AuthValidations = {
   loginValidationSchema,
   refreshTokenValidationSchema,
+  forgetPasswordValidationSchema,
 };

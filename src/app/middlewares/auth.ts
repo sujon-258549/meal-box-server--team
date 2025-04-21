@@ -9,7 +9,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import AppError from '../errors/AppError';
 
 const auth = (...requireRoles: TUserRole[]) => {
-  // console.log(requireAuth);
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
     console.log('token', token);
@@ -21,17 +20,12 @@ const auth = (...requireRoles: TUserRole[]) => {
 
     //check if the token is valid
 
-    // const decoded = jwt.verify(
-    //   token,
-    //   config.jwt_access_secret as string,
-    // ) as JwtPayload;
 
     const decoded = verifyToken(token, config.jwt_access_secret as string);
     console.log('decoded from auth.ts', decoded);
 
     // const role = decoded.role;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { emailOrPhone, role, iat } = decoded;
+    const { emailOrPhone, role } = decoded;
 
     //check if user is exist
     const user = await User.isUserExistByEmailOrPhone(emailOrPhone);

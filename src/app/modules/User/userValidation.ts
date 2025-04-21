@@ -10,7 +10,7 @@ export const addressSchema = z.object({
 });
 
 // Register Schema
-export const createUserValidationSchema = z.object({
+const createUserValidationSchema = z.object({
   body: z.object({
     fullName: z.string().min(1, 'Full name is required'),
     email: z.string().email('Invalid email address'),
@@ -22,8 +22,25 @@ export const createUserValidationSchema = z.object({
     gender: z.enum(['male', 'female', 'other']),
     phoneNumber: z.string(),
     secondaryPhone: z.string().optional(),
-    profileImage: z.string().url().optional(),
-    nidNumber: z.string().optional(),
+    isShop: z.boolean().optional(),
+    isBlock: z.boolean().optional(),
+    isDelete: z.boolean().optional(),
+  }),
+});
+
+const updateUserValidationSchema = z.object({
+  body: z.object({
+    fullName: z.string().optional(),
+    dateOfBirth: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: 'Invalid date format',
+    })
+    .optional(),
+    gender: z.enum(['male', 'female', 'other']).optional(),
+    phoneNumber: z.string().optional(),
+    secondaryPhone: z.string().optional(),
+    address: addressSchema.optional(),
     isShop: z.boolean().optional(),
     isBlock: z.boolean().optional(),
     isDelete: z.boolean().optional(),
@@ -32,4 +49,5 @@ export const createUserValidationSchema = z.object({
 
 export const UserValidations = {
   createUserValidationSchema,
+  updateUserValidationSchema,
 };
