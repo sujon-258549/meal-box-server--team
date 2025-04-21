@@ -7,8 +7,9 @@ main().catch((err) => console.log(err));
 async function main() {
   try {
     await mongoose.connect(config.database_url as string);
-    app.listen(config.port, () => {
-      console.log(`🔥🔥 Meal Box app listening on port ${config.port} 🔥🔥`);
+    const port = process.env.PORT || config.port;
+    app.listen(port, () => {
+      console.log(`🔥🔥 Meal Box app listening on port ${port} 🔥🔥`);
     });
   } catch (error) {
     console.log(error);
