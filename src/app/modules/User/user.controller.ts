@@ -40,8 +40,27 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const uploadImage = catchAsync(async (req: Request, res: Response) => {
+  if (!req.file) {
+    return sendResponse(res, {
+      statusCode: status.BAD_REQUEST,
+      success: false,
+      message: 'No file uploaded',
+      data: null,
+    });
+  }
+  const result = await UserServices.setImageIntoUser(req.file, req.user);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Image uploaded successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   updateUser,
   getMe,
+  uploadImage,
 };
