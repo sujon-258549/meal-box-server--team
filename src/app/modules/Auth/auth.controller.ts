@@ -48,9 +48,12 @@ const forgetPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const body = req.headers.authorization;
+  const { authorization } = req.headers;
   const data = req.body;
-  const result = await AuthServices.resetPasswordIntoDB(body, data);
+  if (!authorization) {
+    throw new Error('Authorization header is missing');
+  }
+  const result = await AuthServices.resetPasswordIntoDB(authorization, data);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,

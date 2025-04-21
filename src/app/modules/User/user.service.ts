@@ -9,7 +9,6 @@ const createUserIntoDB = async (userData: TUser) => {
 };
 
 const updateUserIntoDB = async (userData: Partial<TUser>, user: JwtPayload) => {
-  
   const updatedUser = await User.findByIdAndUpdate(user.id, userData, {
     new: true,
     runValidators: true,

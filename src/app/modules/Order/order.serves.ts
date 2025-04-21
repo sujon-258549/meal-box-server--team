@@ -1,4 +1,3 @@
- 
 import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';
@@ -30,7 +29,7 @@ const createOrderIntoDB = async (
   const existShop = await MealProvider.findOne({
     authorShopId: existMenu.author_id,
   });
-  
+
   if (!existShop) {
     throw new AppError(status.NOT_FOUND, 'Shop not found');
   }

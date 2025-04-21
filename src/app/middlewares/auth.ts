@@ -20,7 +20,6 @@ const auth = (...requireRoles: TUserRole[]) => {
 
     //check if the token is valid
 
-
     const decoded = verifyToken(token, config.jwt_access_secret as string);
     console.log('decoded from auth.ts', decoded);
 
