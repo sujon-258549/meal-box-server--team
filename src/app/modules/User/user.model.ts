@@ -3,15 +3,13 @@ import bcrypt from 'bcrypt';
 import { TAddress, TUser, UserModel } from './user.interface';
 import config from '../../config';
 
-const addressSchema = new Schema<TAddress>(
-  {
-    village: { type: String, required: true },
-    district: { type: String, required: true },
-    subDistrict: { type: String, required: true },
-    post: { type: String, required: true },
-    postCode: { type: String, required: true },
-  },
-);
+const addressSchema = new Schema<TAddress>({
+  village: { type: String, required: true },
+  district: { type: String, required: true },
+  subDistrict: { type: String, required: true },
+  post: { type: String, required: true },
+  postCode: { type: String, required: true },
+});
 
 const userSchema = new Schema<TUser>(
   {
