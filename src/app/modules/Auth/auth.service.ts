@@ -65,7 +65,7 @@ const refreshToken = async (token: string) => {
 
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
-  const { emailOrPhone, iat } = decoded;
+  const { emailOrPhone } = decoded;
   console.log('decoded', decoded);
 
   //check if user is exist
@@ -144,7 +144,7 @@ const forgetPasswordIntoDB = async (email: number) => {
 };
 // reset password
 const resetPasswordIntoDB = async (
-  payload: any,
+  payload: string,
   data: { newPassword: string; email: string },
 ) => {
   let decoded;
@@ -153,7 +153,7 @@ const resetPasswordIntoDB = async (
       payload,
       config.jwt_access_secret as string,
     ) as JwtPayload;
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
   }
