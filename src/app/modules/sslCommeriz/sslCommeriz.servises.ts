@@ -87,7 +87,6 @@ const validatePaymentService = async (tran_id: string): Promise<boolean> => {
   session.startTransaction();
 
   try {
-    // @ts-expect-error
     const validationResponse = await sslcz.transactionQueryByTransactionId({
       tran_id,
     });

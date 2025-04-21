@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ 
 import { JwtPayload } from 'jsonwebtoken';
 import { TOrderMenu } from './order.interface';
 import { Order } from './order.model';

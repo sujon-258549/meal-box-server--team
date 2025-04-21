@@ -15,6 +15,7 @@ router.post(
 router.put(
   '/update-user',
   auth('admin', 'mealProvider', 'customer'),
+  ValidateRequest(UserValidations.updateUserValidationSchema),
   UserControllers.updateUser,
 );
 
