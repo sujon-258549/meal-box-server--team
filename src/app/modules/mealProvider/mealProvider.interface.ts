@@ -1,7 +1,9 @@
-export interface TMealProvider {
+import { Model, Types } from 'mongoose';
+
+export type TMealProvider = {
   shopName: string;
   shopAddress: string;
-  authorShopId: string;
+  authorShopId: Types.ObjectId;
   shopLogo?: string;
   phoneNumber: string;
   website?: string;
@@ -23,4 +25,8 @@ export interface TMealProvider {
   };
   paymentMethods: string[];
   customerServiceContact?: string;
+};
+
+export interface MealProviderModel extends Model<TMealProvider> {
+  isMealProviderExists(id: string): Promise<TMealProvider | null>;
 }

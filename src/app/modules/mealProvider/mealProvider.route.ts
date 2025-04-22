@@ -20,6 +20,7 @@ router.post(
 );
 
 router.get('/', MealProviderControllers.getAllMealProvider);
+
 router.get(
   '/my-meal-provider',
   auth('mealProvider'),
@@ -34,7 +35,6 @@ router.put(
     req.body = JSON.parse(req.body.data);
     next();
   },
-  //   auth(UserRole.user),
   MealProviderControllers.updateMealProvider,
 );
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);

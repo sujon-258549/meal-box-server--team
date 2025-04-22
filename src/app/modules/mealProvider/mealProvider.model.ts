@@ -1,10 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
-import { TMealProvider } from './mealProvider.interface';
+import { MealProviderModel, TMealProvider } from './mealProvider.interface';
 
 const providerSchema = new Schema<TMealProvider>({
   shopName: { type: String, required: true },
   ownerName: { type: String, required: true },
-  authorShopId: { type: String, required: true, unique: true }, //will be added service file
+  authorShopId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    unique: true,
+    ref: 'User',
+  }, //will be added service file
   shopAddress: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   customerServiceContact: { type: String },
@@ -29,10 +34,13 @@ const providerSchema = new Schema<TMealProvider>({
   isActive: { type: Boolean, default: true },
 });
 
+providerSchema.statics.isMealProviderExists = async function (id: string) {
+  const existingMealProvider = await MealProvider.findOne({ authorShopId: id });
+  return existingMealProvider;
+};
+
 // Create and export the model
-const MealProvider = mongoose.model<TMealProvider>(
+export const MealProvider = mongoose.model<TMealProvider, MealProviderModel>(
   'MealProvider',
   providerSchema,
 );
-
-export default MealProvider;

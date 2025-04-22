@@ -21,6 +21,7 @@ const createMealProvider = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getAllMealProvider = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const result = await MealProviderServices.getAllMealProviderIntoDB(query);
@@ -48,11 +49,10 @@ const updateMealProvider = catchAsync(async (req: Request, res: Response) => {
     req.file,
     req?.user,
   );
-  // console.log(req.file, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Meal Provider update successfully',
+    message: 'Meal Provider updated successfully',
     data: result,
   });
 });
