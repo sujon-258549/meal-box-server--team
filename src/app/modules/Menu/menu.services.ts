@@ -26,7 +26,7 @@ const createMenuForDayInToDB = async (
     author_id: mealProvider._id,
   });
 
-  console.log('existingMenuuuuuuu', existingMenu);
+  
 
   if (existingMenu) {
     throw new AppError(
@@ -75,7 +75,7 @@ const findAllMenuFromDB = async (
 };
 
 const findMyMenu = async (user: JwtPayload) => {
-  // console.log('user from menu service', user.id)
+  
   const isExistMealProvider = await MealProvider.findOne({
     userId: user.id,
   });
@@ -89,7 +89,7 @@ const findMyMenu = async (user: JwtPayload) => {
     .populate('author_id')
     .populate('shopId');
 
-  // console.log(result);
+  
   return result;
 };
 

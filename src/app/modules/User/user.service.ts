@@ -40,6 +40,7 @@ const setImageIntoUser = async (
   file: Express.Multer.File,
   user: JwtPayload,
 ) => {
+  
   const { id } = user;
 
   const isExistUser = await User.findOne({ id });

@@ -14,7 +14,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const user = await User.findOne({
     $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
   }).select('+password');
-  console.log(user);
+  
   if (!user) {
     throw new AppError(status.NOT_FOUND, 'User not found!');
   }
@@ -38,7 +38,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
     role: user.role,
     id: user?.id,
   };
-  // console.log('jwtPayload', jwtPayload);
+  
 
   const accessToken = createToken(
     jwtPayload,
@@ -60,7 +60,7 @@ const refreshToken = async (token: string) => {
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { emailOrPhone } = decoded;
-  console.log('decoded', decoded);
+  
 
   //check if user is exist
   const user = await User.findOne({
@@ -114,7 +114,7 @@ const refreshToken = async (token: string) => {
 
 // forget password
 const forgetPasswordIntoDB = async (email: number) => {
-  console.log(email);
+  
   const existEmail = await User.findOne({ email: email });
   if (!existEmail) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User not found.');
@@ -133,7 +133,7 @@ const forgetPasswordIntoDB = async (email: number) => {
   );
 
   const resetUrlLink = `${config.RESET_UI_LINK}?email=${existEmail?.email}&token=${accessToken}`;
-  console.log(resetUrlLink);
+  
   sendEmail(existEmail.email, resetUrlLink);
 };
 // reset password
@@ -159,7 +159,7 @@ const resetPasswordIntoDB = async (
   if (data.email != user?.email) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
   }
-  console.log(user.email);
+  
   const hasPassword = await bcrypt.hash(data?.newPassword, 5);
   const result = await User.findOneAndUpdate(
     { email: user.email }, // ✅ this is correct for filtering by email
@@ -176,7 +176,7 @@ const changePasswordIntoDB = async (
   payload: { oldPassword: string; newPassword: string },
   token: JwtPayload,
 ) => {
-  console.log({ token });
+  
   const existEmail = await User.findOne({ email: token?.emailOrPhone });
   if (!existEmail) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User not found.');

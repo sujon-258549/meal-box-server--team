@@ -72,7 +72,11 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
-    profileImage: { type: String, default: 'https://ibb.co.com/NnCmw5Jj' },
+    profileImage: {
+      type: String,
+      default:
+        'https://i.ibb.co.com/h19Zpb4W/male-avatar-profile-picture-vector-10211761.jpg',
+    },
   },
   { timestamps: true },
 );

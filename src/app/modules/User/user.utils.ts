@@ -9,7 +9,7 @@ export const generateUserId = async () => {
 
   const lastUser = await User.findOne(
     { id: { $regex: `^${prefix}` } },
-    { id: 1, _id: 0 }
+    { id: 1, _id: 0 },
   )
     .sort({ createdAt: -1 })
     .lean();
