@@ -5,9 +5,9 @@ import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.body);
+ 
   const result = await UserServices.createUserIntoDB(req.body);
-  // console.log(result);
+  
 
   sendResponse(res, {
     statusCode: status.OK,

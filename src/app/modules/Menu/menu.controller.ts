@@ -6,7 +6,7 @@ import sendResponse from '../../utils/sendResponse';
 
 const createMenuForDay = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  console.log('data from menu controller', data);
+  
   const result = await MenuServices.createMenuForDayInToDB(
     data,
     req.file,

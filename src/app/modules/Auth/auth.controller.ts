@@ -8,7 +8,7 @@ import httpStatus from 'http-status';
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUserIntoDB(req.body);
   const { accessToken, refreshToken } = result;
-  console.log(refreshToken);
+ 
   res.cookie('refreshToken', refreshToken, {
     secure: config.NODE_ENV === 'production' ? true : false,
     httpOnly: true,
@@ -25,7 +25,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 const refreshToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
-  console.log('refreshToken', refreshToken);
+  
 
   const result = await AuthServices.refreshToken(refreshToken);
 

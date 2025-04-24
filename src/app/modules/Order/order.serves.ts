@@ -13,25 +13,20 @@ const createOrderIntoDB = async (
   user: JwtPayload,
   menuId: string,
 ) => {
-  console.log({ payload, user, menuId });
+  
 
   // Assign user ID to the order
   // payload.customerId = user.id;
   // payload.orderId = menuId;
-  // console.log(menuId);
+  
   const existMenu = await Menu.findById(menuId);
-  console.log(existMenu);
+  
   if (!existMenu) {
     throw new AppError(status.UNAUTHORIZED, 'Menu not found');
   }
   payload.customerId = user.id;
   payload.orderId = menuId;
-  // //   Calculate the total price into days
-  // console.log(payload.orders);
 
-  // const existShop = await MealProvider.findOne({
-  //   shopId: existMenu.shopId,
-  // });
   const isExistMealProvider = await MealProvider.findOne({
     _id: existMenu.shopId,
   });
@@ -45,6 +40,7 @@ const createOrderIntoDB = async (
       day.meals?.reduce((mealAcc, meal) => mealAcc + (meal.price || 0), 0) || 0;
     return acc + dayMealsTotal;
   }, 0);
+  
   payload.total_price = totalPrice;
   //   transition id
   const digits = Array.from({ length: 20 }, () =>
@@ -53,7 +49,7 @@ const createOrderIntoDB = async (
   const bigIntNumber = BigInt(digits);
   payload.transactionId = String(bigIntNumber);
   const res = await Order.create(payload);
-  console.log(res);
+  
 
   let result;
   if (res) {
@@ -63,10 +59,10 @@ const createOrderIntoDB = async (
       tran_id: bigIntNumber,
       // tran_id: String(bigIntNumber),
     });
-    console.log('✅ SSLCommerz Payment URL:', result);
+    
     result = { paymentUrl: result };
   }
-  console.log(result);
+  
   return result; // Include total price in the response
 };
 
@@ -76,9 +72,14 @@ const findMyOrderIntoDB = async (
 ) => {
   const myOrder = new queryBuilder(
     Order.find({ customerId: user.id })
-      .populate('customerId')
+      .populate({
+        path: 'customerId',
+        model: 'User',
+        localField: 'customerId',
+        foreignField: 'id',
+        select: '',
+      })
       .populate('orderId')
-      .populate('authorId')
       .populate('shopId'),
     query,
   )
@@ -92,13 +93,20 @@ const findMyOrderIntoDB = async (
 };
 
 const getSingleOrderFromDB = async (userInfo: JwtPayload, orderId: string) => {
-  console.log(userInfo, orderId);
+ 
   const res = await Order.findOne({ _id: orderId })
-    .populate('customerId')
+    // .populate('customerId')
+    .populate({
+      path: 'customerId',
+      model: 'User',
+      localField: 'customerId',
+      foreignField: 'id',
+      select: '',
+    })
     .populate('orderId')
-    .populate('authorId')
+    // .populate('authorId')
     .populate('shopId');
-  console.log(res);
+  
   return res;
 };
 

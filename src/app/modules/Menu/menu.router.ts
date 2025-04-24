@@ -12,7 +12,7 @@ router.post(
   auth('mealProvider'),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
-    console.log('req.body', req.body);
+    
     req.body = JSON.parse(req.body.data);
     next();
   },
@@ -26,7 +26,7 @@ router.get('/my-menu', auth('mealProvider'), MenuControllers.findMyMenu);
 
 router.get(
   '/:id',
-  auth('mealProvider', 'customer'),
+  // auth('mealProvider', 'customer'),
   MenuControllers.findSingleMenu,
 );
 
