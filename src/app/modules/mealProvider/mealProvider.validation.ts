@@ -49,7 +49,11 @@ const updateMealProviderSchema = z.object({
     phoneNumber: z.string().min(10).optional(),
     website: z.string().url().optional(),
     ownerName: z.string().min(1).optional(),
-    establishedYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
+    establishedYear: z
+      .number()
+      .min(1900)
+      .max(new Date().getFullYear())
+      .optional(),
     productCategories: z.array(z.string().min(1)).optional(),
     socialMediaLinks: socialMediaLinksSchema,
     operatingHours: operatingHoursSchema.partial().optional(), // allow partial updates
@@ -58,4 +62,7 @@ const updateMealProviderSchema = z.object({
   }),
 });
 
-export const mealProviderValidations = { createMealProviderSchema, updateMealProviderSchema };
+export const mealProviderValidations = {
+  createMealProviderSchema,
+  updateMealProviderSchema,
+};

@@ -34,7 +34,7 @@ router.put(
     req.body = JSON.parse(req.body.data);
     next();
   },
-    ValidateRequest(mealProviderValidations.updateMealProviderSchema),
+  ValidateRequest(mealProviderValidations.updateMealProviderSchema),
   MealProviderControllers.updateMealProvider,
 );
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);

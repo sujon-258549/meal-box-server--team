@@ -13,8 +13,7 @@ const insertPayment = async (paymentData: {
   tran_id: string | number;
 }) => {
   const { total_amount, tran_id } = paymentData;
-  console.log('payment data', paymentData);
-  console.log('tran id', tran_id);
+
   const data = {
     total_amount: total_amount, // ✅ number
     currency: 'BDT', // ✅ string
@@ -56,6 +55,7 @@ const insertPayment = async (paymentData: {
   try {
     // @ts-expect-error data
     const apiResponse = await sslcz.init(data);
+    console.log('API Response:', apiResponse); // Log the API response for debugging
 
     // Redirect the user to the payment gateway
     const GatewayPageURL = apiResponse.GatewayPageURL;
@@ -92,8 +92,6 @@ const validatePaymentService = async (tran_id: string): Promise<boolean> => {
     const validationResponse = await sslcz.transactionQueryByTransactionId({
       tran_id,
     });
-
-    // console.log(validationResponse.element);
 
     let data;
 
