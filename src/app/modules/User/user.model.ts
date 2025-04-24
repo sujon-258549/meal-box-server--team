@@ -13,6 +13,7 @@ const addressSchema = new Schema<TAddress>({
 
 const userSchema = new Schema<TUser>(
   {
+    id: { type: String, required: true },
     fullName: {
       type: String,
       required: true,
@@ -27,6 +28,7 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
       minlength: 6,
+      trim: true,
       select: false,
     },
     dateOfBirth: {
@@ -108,11 +110,8 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
-userSchema.statics.isUserExistByEmailOrPhone = async function (emailOrPhone) {
-  // const user = this;
-  return await this.findOne({
-    $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
-  });
+userSchema.statics.isUserExistByCustomId = async function (id: string) {
+  return await User.findOne({ id }).select('+password');
 };
 
 const User = model<TUser, UserModel>('User', userSchema);

@@ -20,7 +20,7 @@ const operatingHoursSchema = z.object({
 });
 
 // Main TMealProvider Schema
-const mealProviderSchema = z.object({
+const createMealProviderSchema = z.object({
   body: z.object({
     shopName: z.string().min(1, 'Shop name is required'),
     shopAddress: z.string().min(1, 'Shop address is required'),
@@ -40,5 +40,22 @@ const mealProviderSchema = z.object({
     customerServiceContact: z.string().optional(),
   }),
 });
+// For UPDATE: All fields optional, but validated if provided
+const updateMealProviderSchema = z.object({
+  body: z.object({
+    shopName: z.string().min(1).optional(),
+    shopAddress: z.string().min(1).optional(),
+    shopLogo: z.string().url().optional(),
+    phoneNumber: z.string().min(10).optional(),
+    website: z.string().url().optional(),
+    ownerName: z.string().min(1).optional(),
+    establishedYear: z.number().min(1900).max(new Date().getFullYear()).optional(),
+    productCategories: z.array(z.string().min(1)).optional(),
+    socialMediaLinks: socialMediaLinksSchema,
+    operatingHours: operatingHoursSchema.partial().optional(), // allow partial updates
+    paymentMethods: z.array(z.string().min(1)).optional(),
+    customerServiceContact: z.string().optional(),
+  }),
+});
 
-export const mealProviderValidations = { mealProviderSchema };
+export const mealProviderValidations = { createMealProviderSchema, updateMealProviderSchema };

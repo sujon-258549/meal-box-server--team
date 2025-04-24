@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { IDayMenu, IMenuItem, TMenu } from './menu.interface';
 
 const MenuItemSchema = new Schema<IMenuItem>({
@@ -15,21 +15,17 @@ const DayMenuSchema = new Schema<IDayMenu>({
 
 const MenuSchema = new Schema<TMenu>(
   {
-    author_id: { type: String, required: true, ref: 'User' },
+    userId: { type: String, required: true },
+    author_id: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     shopId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: 'MealProvider',
     },
     menuImage: { type: String, required: true },
     meals: { type: [DayMenuSchema], required: true },
-    // mealsHash: {
-    //   type: String,
-    //   required: true,
-    //   index: true,
-    // },
   },
   { timestamps: true },
 );
 
-export const Menu = mongoose.model<TMenu>('Menu', MenuSchema);
+export const Menu = model<TMenu>('Menu', MenuSchema);

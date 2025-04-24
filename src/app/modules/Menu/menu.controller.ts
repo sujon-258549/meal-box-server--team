@@ -6,7 +6,8 @@ import sendResponse from '../../utils/sendResponse';
 
 const createMenuForDay = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await MenuServices.createMenuForDayIntoDB(
+  console.log('data from menu controller', data);
+  const result = await MenuServices.createMenuForDayInToDB(
     data,
     req.file,
     req?.user,
@@ -18,18 +19,19 @@ const createMenuForDay = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const findMyMenu = catchAsync(async (req: Request, res: Response) => {
   const result = await MenuServices.findMyMenu(req.user); //
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'All Menu retrieved successfully',
+    message: 'Menu retrieved successfully',
     data: result,
   });
 });
 
 const findAllMenu = catchAsync(async (req: Request, res: Response) => {
-  const result = await MenuServices.findAllMenuIntoDB(req?.user, req?.query); //
+  const result = await MenuServices.findAllMenuFromDB(req?.user, req?.query); //
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
@@ -45,7 +47,7 @@ const findSingleMenu = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'One menu retrieved successfully',
+    message: 'Single Menu retrieved successfully',
     data: result,
   });
 });
@@ -55,7 +57,18 @@ const updateMyMenu = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Update my menu successfully',
+    message: 'Menu Updated successfully',
+    data: result,
+  });
+});
+
+const deleteMyMenu = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await MenuServices.deleteMyMenuFromDB(id, req?.user);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Menu Deleted successfully',
     data: result,
   });
 });
@@ -66,4 +79,5 @@ export const MenuControllers = {
   findMyMenu,
   updateMyMenu,
   findSingleMenu,
+  deleteMyMenu,
 };
