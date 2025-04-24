@@ -1,9 +1,11 @@
+import { Types } from 'mongoose';
+
 export interface IMenuItem {
   menu: string;
   price: number;
 }
 export interface IDayMenu {
-  day?: string; // Example: "Saturday"
+  day?: string;
   morning?: IMenuItem;
   evening?: IMenuItem;
   night?: IMenuItem;
@@ -11,8 +13,8 @@ export interface IDayMenu {
 
 export interface TMenu {
   meals: IDayMenu[];
-  author_id: string;
-  shopId: string;
+  userId: string;
+  author_id: Types.ObjectId;
+  shopId: Types.ObjectId;
   menuImage: string;
-  // mealsHash: string;
 }

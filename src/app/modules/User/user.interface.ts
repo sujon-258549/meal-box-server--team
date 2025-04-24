@@ -8,6 +8,7 @@ export type TAddress = {
   postCode: string;
 };
 export type TUser = {
+  id: string;
   fullName: string;
   email: string;
   password: string;
@@ -23,10 +24,8 @@ export type TUser = {
   profileImage: string;
 };
 
-
-
 export interface UserModel extends Model<TUser> {
-  isUserExistByEmailOrPhone(emailOrPhone: string): Promise<TUser>;
+  isUserExistByCustomId(id: string): Promise<TUser>;
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,

@@ -13,6 +13,8 @@ const insertPayment = async (paymentData: {
   tran_id: string | number;
 }) => {
   const { total_amount, tran_id } = paymentData;
+  console.log('payment data', paymentData);
+  console.log('tran id', tran_id);
   const data = {
     total_amount: total_amount, // ✅ number
     currency: 'BDT', // ✅ string

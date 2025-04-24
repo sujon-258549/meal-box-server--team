@@ -36,7 +36,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const jwtPayload = {
     emailOrPhone: usedEmail ? user.email : user.phoneNumber,
     role: user.role,
-    id: user?._id,
+    id: user?.id,
   };
   // console.log('jwtPayload', jwtPayload);
 
@@ -57,7 +57,6 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
 };
 
 const refreshToken = async (token: string) => {
-
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { emailOrPhone } = decoded;

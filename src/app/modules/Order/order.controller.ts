@@ -6,8 +6,9 @@ import sendResponse from '../../utils/sendResponse';
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  const { id } = req.params;
-  const result = await orderServes.createOrderIntoDB(data, req?.user, id);
+  console.log('data from controller', data);
+  const { menuId } = req.params;
+  const result = await orderServes.createOrderIntoDB(data, req?.user, menuId);
   sendResponse(res, {
     statusCode: status.CREATED,
     success: true,

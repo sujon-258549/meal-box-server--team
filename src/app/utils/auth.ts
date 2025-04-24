@@ -32,15 +32,16 @@ const auth = (...requiredRole: TUserRole[]) => {
       token,
       config.jwt_access_secret as string,
     ) as JwtPayload;
-    const { emailOrPhone, role } = decoded;
+    const { id, role } = decoded;
 
     // const user = await User.findOne({ _id: decoded.id });
     //check if user is exist
-    const user = await User.isUserExistByEmailOrPhone(emailOrPhone);
+    const user = await User.isUserExistByCustomId(id);
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'Your User Id is Invalid!');
     }
+
     if (requiredRole && !requiredRole?.includes(role)) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,

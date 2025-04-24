@@ -7,47 +7,95 @@ import User from '../User/user.model';
 
 import { JwtPayload } from 'jsonwebtoken';
 import { TMealProvider } from './mealProvider.interface';
-import MealProvider from '../mealProvider/mealProvider.model';
+import { MealProvider } from '../mealProvider/mealProvider.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import mongoose from 'mongoose';
 
 const createMealProviderIntoDB = async (
   payload: TMealProvider,
   file: any,
   user: JwtPayload,
 ) => {
-  console.log(payload);
-  const existId = await MealProvider.findOne({ authorShopId: user?.id });
-  if (existId) {
-    throw new AppError(status.CONFLICT, 'This user already shop create');
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const isUserExist = await User.findOne({ id: user.id }).session(session);
+    console.log('isUserExist', isUserExist);
+    if (!isUserExist) {
+      throw new AppError(status.NOT_FOUND, 'User not found');
+    }
+    // console.log('isUserExist', isUserExist);
+    if (isUserExist?.isShop) {
+      throw new AppError(
+        status.FORBIDDEN,
+        'You are not allowed to create shop',
+      );
+    }
+
+    const isMealProviderExist = await MealProvider.findOne({
+      userId: user.id,
+    }).session(session);
+    console.log('isMealProviderExist', isMealProviderExist);
+
+    if (isMealProviderExist) {
+      throw new AppError(status.CONFLICT, 'This user already shop create');
+    }
+    if (!file) {
+      throw new AppError(status.BAD_REQUEST, 'Image is required');
+    } else {
+      const path = file.path;
+      const name = payload.shopName.replace(/\s+/g, '_').toLowerCase();
+
+      const { secure_url } = (await sendImageToCloudinary(name, path)) as {
+        secure_url: string;
+      };
+
+      payload.shopLogo = secure_url;
+    }
+
+    console.log('userIdvvvvvv ', user.id);
+    payload.userId = user.id;
+
+    payload.authorShopId = isUserExist._id;
+
+    console.log('authorShopId', payload.authorShopId);
+
+    const newMealProvider = await MealProvider.create([payload], { session });
+    if (!newMealProvider.length) {
+      throw new AppError(status.BAD_REQUEST, 'Failed to create Meal Provider');
+    }
+
+    isUserExist.isShop = true;
+    isUserExist.role = USER_ROLE.mealProvider;
+    await isUserExist.save({ session });
+
+    await session.commitTransaction();
+    await session.endSession();
+    return newMealProvider[0];
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
   }
-  const path = file?.path;
-  const name = payload.shopName;
-
-  const imageUrl = (await sendImageToCloudinary(name, path)) as {
-    secure_url: string;
-  };
-
-  payload.authorShopId = user.id;
-  payload.shopLogo = imageUrl?.secure_url;
-
-  const result = await MealProvider.create(payload);
-
-  await User.findByIdAndUpdate(user.id, {
-    role: USER_ROLE.mealProvider,
-    isShop: true,
-  });
-  return result;
 };
 
 const getAllMealProviderIntoDB = async (query: Record<string, unknown>) => {
-  const mealProvider = new queryBuilder(MealProvider.find(), query);
+  const mealProvider = new queryBuilder(
+    MealProvider.find().populate('authorShopId'),
+    query,
+  );
   const meta = await mealProvider.countTotal();
   const data = await mealProvider.modelQuery;
 
   return { data, meta };
 };
+
 const getMyMealProviderIntoDB = async (user: JwtPayload) => {
-  const result = await MealProvider.findOne({ authorShopId: user.id });
+  const result = await MealProvider.findOne({ userId: user.id }).populate(
+    'authorShopId',
+  );
   return result;
 };
 
@@ -56,36 +104,37 @@ const updateMealProviderIntoDB = async (
   file: any,
   user: JwtPayload,
 ) => {
-  // let shopLogo;
+  const isExistMealProvider = await MealProvider.isMealProviderExists(user.id);
+  if (!isExistMealProvider) {
+    throw new AppError(status.NOT_FOUND, 'Meal Provider not found');
+  }
+
   if (file) {
     const path = file.path;
-    const name = payload.shopName;
-    if (!name || !path) {
-      throw new Error('Shop name and file path are required');
-    }
+    const name =
+      (payload.shopName?.replace(/\s+/g, '_').toLowerCase() ??
+        isExistMealProvider.shopName) ||
+      isExistMealProvider.shopName;
 
-    const cloudinaryResult = (await sendImageToCloudinary(name, path)) as {
+    const { secure_url } = (await sendImageToCloudinary(name, path)) as {
       secure_url: string;
     };
 
-    if (!cloudinaryResult?.secure_url) {
-      throw new Error('Failed to upload image to Cloudinary');
+    if (!secure_url) {
+      throw new AppError(
+        status.BAD_REQUEST,
+        'Failed to upload image to Cloudinary',
+      );
     }
 
-    payload.shopLogo = cloudinaryResult.secure_url;
+    payload.shopLogo = secure_url;
   }
 
-  payload.authorShopId = user.id;
-
   const result = await MealProvider.findOneAndUpdate(
-    { authorShopId: user.id },
+    { userId: user.id },
     payload,
     { new: true },
   );
-
-  if (!result) {
-    throw new AppError(status.NOT_FOUND, 'User not found');
-  }
 
   return result;
 };

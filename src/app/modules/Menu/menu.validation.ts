@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Menu Item Validation
+// Menu Item Validation for creating
 const menuItemValidationSchema = z.object({
   menu: z.string({
     required_error: 'Menu item name is required',
@@ -14,7 +14,13 @@ const menuItemValidationSchema = z.object({
     .positive('Price must be a positive number'),
 });
 
-// Day Menu Validation
+// Menu item schema for updating
+const updateMenuItemValidationSchema = z.object({
+  menu: z.string().optional(),
+  price: z.number().positive('Price must be a positive number').optional(),
+});
+
+// Day Menu Validation creating
 const dayMenuValidationSchema = z.object({
   day: z.string().optional(),
   morning: menuItemValidationSchema.optional(),
@@ -22,8 +28,16 @@ const dayMenuValidationSchema = z.object({
   night: menuItemValidationSchema.optional(),
 });
 
-// Main Menu Validation with the `body` wrapper
-const menuValidationSchema = z.object({
+// Day-wise menu schema for updating
+const updateDayMenuValidationSchema = z.object({
+  day: z.string().optional(),
+  morning: updateMenuItemValidationSchema.optional(),
+  evening: updateMenuItemValidationSchema.optional(),
+  night: updateMenuItemValidationSchema.optional(),
+});
+
+// Main Menu Validation for creating
+const createMenuValidationSchema = z.object({
   body: z.object({
     meals: z
       .array(dayMenuValidationSchema, {
@@ -34,6 +48,14 @@ const menuValidationSchema = z.object({
   }),
 });
 
+// Main Menu update schema
+const updateMenuValidationSchema = z.object({
+  body: z.object({
+    meals: z.array(updateDayMenuValidationSchema).optional(),
+  }),
+});
+
 export const MenuValidations = {
-  menuValidationSchema,
+  createMenuValidationSchema,
+  updateMenuValidationSchema,
 };
