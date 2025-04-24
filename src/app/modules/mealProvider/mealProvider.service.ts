@@ -20,42 +20,59 @@ const createMealProviderIntoDB = async (
 
   try {
     session.startTransaction();
+
+    const isUserExist = await User.findOne({ id: user.id }).session(session);
+    console.log('isUserExist', isUserExist);
+    if (!isUserExist) {
+      throw new AppError(status.NOT_FOUND, 'User not found');
+    }
+    // console.log('isUserExist', isUserExist);
+    if (isUserExist?.isShop) {
+      throw new AppError(
+        status.FORBIDDEN,
+        'You are not allowed to create shop',
+      );
+    }
+
     const isMealProviderExist = await MealProvider.findOne({
-      authorShopId: user?.id,
+      userId: user.id,
     }).session(session);
+    console.log('isMealProviderExist', isMealProviderExist);
 
     if (isMealProviderExist) {
       throw new AppError(status.CONFLICT, 'This user already shop create');
     }
+    if (!file) {
+      throw new AppError(status.BAD_REQUEST, 'Image is required');
+    } else {
+      const path = file.path;
+      const name = payload.shopName.replace(/\s+/g, '_').toLowerCase();
 
-    const path = file?.path;
-    const name = payload.shopName;
+      const { secure_url } = (await sendImageToCloudinary(name, path)) as {
+        secure_url: string;
+      };
 
-    const { secure_url } = (await sendImageToCloudinary(name, path)) as {
-      secure_url: string;
-    };
-    if (!secure_url) {
-      throw new AppError(status.INTERNAL_SERVER_ERROR, 'Image not found');
+      payload.shopLogo = secure_url;
     }
-    // payload.authorShopId = user.id;
-    payload.authorShopId = user.id;
-    payload.shopLogo = secure_url;
+
+    console.log('userIdvvvvvv ', user.id);
+    payload.userId = user.id;
+
+    payload.authorShopId = isUserExist._id;
+
+    console.log('authorShopId', payload.authorShopId);
 
     const newMealProvider = await MealProvider.create([payload], { session });
     if (!newMealProvider.length) {
       throw new AppError(status.BAD_REQUEST, 'Failed to create Meal Provider');
     }
-    await User.findByIdAndUpdate(
-      user.id,
-      {
-        role: USER_ROLE.mealProvider,
-        isShop: true,
-      },
-      { session },
-    );
+
+    isUserExist.isShop = true;
+    isUserExist.role = USER_ROLE.mealProvider;
+    await isUserExist.save({ session });
+
     await session.commitTransaction();
     await session.endSession();
-    // console.log('updatedUser', updatedUser);
     return newMealProvider[0];
   } catch (err: any) {
     await session.abortTransaction();
@@ -76,7 +93,9 @@ const getAllMealProviderIntoDB = async (query: Record<string, unknown>) => {
 };
 
 const getMyMealProviderIntoDB = async (user: JwtPayload) => {
-  const result = await MealProvider.findOne({ authorShopId: user.id });
+  const result = await MealProvider.findOne({ userId: user.id }).populate(
+    'authorShopId',
+  );
   return result;
 };
 
@@ -92,7 +111,10 @@ const updateMealProviderIntoDB = async (
 
   if (file) {
     const path = file.path;
-    const name = payload.shopName || isExistMealProvider.shopName;
+    const name =
+      (payload.shopName?.replace(/\s+/g, '_').toLowerCase() ??
+        isExistMealProvider.shopName) ||
+      isExistMealProvider.shopName;
 
     const { secure_url } = (await sendImageToCloudinary(name, path)) as {
       secure_url: string;
@@ -109,7 +131,7 @@ const updateMealProviderIntoDB = async (
   }
 
   const result = await MealProvider.findOneAndUpdate(
-    { authorShopId: user.id },
+    { userId: user.id },
     payload,
     { new: true },
   );

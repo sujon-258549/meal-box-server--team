@@ -6,18 +6,16 @@ import AppError from '../../errors/AppError';
 import queryBuilder from '../../builder/queryBuilder';
 import status from 'http-status';
 import { searchableFields } from './menu.constant';
-import MealProvider from '../mealProvider/mealProvider.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { MealProvider } from '../mealProvider/mealProvider.model';
 
-
-
-const createMenuForDayIntoDB = async (
+const createMenuForDayInToDB = async (
   payload: TMenu,
   file: any,
   user: JwtPayload,
 ) => {
   const mealProvider = await MealProvider.findOne({
-    authorShopId: user.id,
+    userId: user.id,
   });
 
   if (!mealProvider) {
@@ -25,8 +23,10 @@ const createMenuForDayIntoDB = async (
   }
 
   const existingMenu = await Menu.findOne({
-    author_id: user.id,
+    author_id: mealProvider._id,
   });
+
+  console.log('existingMenuuuuuuu', existingMenu);
 
   if (existingMenu) {
     throw new AppError(
@@ -35,7 +35,10 @@ const createMenuForDayIntoDB = async (
     );
   }
 
-  const name = file.filename;
+  if (!file) {
+    throw new AppError(status.BAD_REQUEST, 'Image is required');
+  }
+  const name = file.filename.replace(/\s+/g, '_').toLowerCase();
   const path = file?.path;
   const imageUrl = (await sendImageToCloudinary(name, path)) as {
     secure_url: string;
@@ -44,47 +47,67 @@ const createMenuForDayIntoDB = async (
   const newMenuData = {
     ...payload,
     menuImage: imageUrl?.secure_url,
+    userId: user.id,
     shopId: mealProvider._id,
-    author_id: user.id,
+    author_id: mealProvider.authorShopId,
   };
 
   const result = await Menu.create(newMenuData);
   return result;
 };
-const findAllMenuIntoDB = async (
+
+const findAllMenuFromDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  const restorenet = new queryBuilder(
+  const result = new queryBuilder(
     Menu.find().populate('author_id').populate('shopId'),
     query,
   )
     .filter()
+    .paginate()
     .search(searchableFields)
     .sort()
-    .fields()
-    .paginate();
-  const meta = await restorenet.countTotal();
-  const data = await restorenet.modelQuery;
+    .fields();
+  const meta = await result.countTotal();
+  const data = await result.modelQuery;
   return { meta, data };
 };
 
-const findSingleMenu = async (id: string) => {
-  const result = await Menu.findById(id);
+const findMyMenu = async (user: JwtPayload) => {
+  // console.log('user from menu service', user.id)
+  const isExistMealProvider = await MealProvider.findOne({
+    userId: user.id,
+  });
+  if (!isExistMealProvider) {
+    throw new AppError(status.NOT_FOUND, 'Meal provider not found');
+  }
+  const result = await Menu.find({
+    userId: user.id,
+    shopId: isExistMealProvider._id,
+  })
+    .populate('author_id')
+    .populate('shopId');
+
+  // console.log(result);
   return result;
 };
 
-const findMyMenu = async (user: JwtPayload) => {
-  const result = await Menu.findOne({
-    author_id: user?.id,
-  })
+const findSingleMenu = async (id: string) => {
+  const result = await Menu.findById(id)
     .populate('author_id')
     .populate('shopId');
   return result;
 };
 
 const updateMyMenu = async (payload: Partial<TMenu>, user: JwtPayload) => {
-  const result = await Menu.findOneAndUpdate({ author_id: user?.id }, payload, {
+  const isExistMealProvider = await MealProvider.findOne({
+    userId: user.id,
+  });
+  if (!isExistMealProvider) {
+    throw new AppError(status.NOT_FOUND, 'Meal provider not found');
+  }
+  const result = await Menu.findOneAndUpdate({ userId: user.id }, payload, {
     new: true,
   });
 
@@ -95,10 +118,39 @@ const updateMyMenu = async (payload: Partial<TMenu>, user: JwtPayload) => {
   return result;
 };
 
+const deleteMyMenuFromDB = async (menuId: string, user: JwtPayload) => {
+  if (user.role === 'admin') {
+    const result = await Menu.findByIdAndDelete(menuId);
+    if (!result) {
+      throw new AppError(status.NOT_FOUND, 'Menu not found');
+    }
+    return result;
+  }
+
+  const isExistMealProvider = await MealProvider.findOne({
+    userId: user.id,
+  });
+
+  if (!isExistMealProvider) {
+    throw new AppError(status.NOT_FOUND, 'Meal provider not found');
+  }
+
+  const result = await Menu.findOneAndDelete({
+    _id: menuId,
+    shopId: isExistMealProvider._id,
+  });
+  if (!result) {
+    throw new AppError(status.NOT_FOUND, 'Menu not found');
+  }
+
+  return result;
+};
+
 export const MenuServices = {
-  createMenuForDayIntoDB,
-  findAllMenuIntoDB,
+  createMenuForDayInToDB,
+  findAllMenuFromDB,
   findMyMenu,
   updateMyMenu,
   findSingleMenu,
+  deleteMyMenuFromDB,
 };

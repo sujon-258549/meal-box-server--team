@@ -4,6 +4,7 @@ import { MealProviderModel, TMealProvider } from './mealProvider.interface';
 const providerSchema = new Schema<TMealProvider>({
   shopName: { type: String, required: true },
   ownerName: { type: String, required: true },
+  userId: { type: String, required: true },
   authorShopId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -35,7 +36,7 @@ const providerSchema = new Schema<TMealProvider>({
 });
 
 providerSchema.statics.isMealProviderExists = async function (id: string) {
-  const existingMealProvider = await MealProvider.findOne({ authorShopId: id });
+  const existingMealProvider = await MealProvider.findOne({ userId: id });
   return existingMealProvider;
 };
 

@@ -6,34 +6,40 @@ import AppError from '../../errors/AppError';
 import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
-import MealProvider from '../mealProvider/mealProvider.model';
+import { MealProvider } from '../mealProvider/mealProvider.model';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
-  id: string,
+  menuId: string,
 ) => {
-  console.log({ payload, user });
+  console.log({ payload, user, menuId });
 
   // Assign user ID to the order
-  payload.customerId = user.id;
-  payload.orderId = id;
-  const existMenu = await Menu.findById(id);
+  // payload.customerId = user.id;
+  // payload.orderId = menuId;
+  // console.log(menuId);
+  const existMenu = await Menu.findById(menuId);
+  console.log(existMenu);
   if (!existMenu) {
-    throw new AppError(status.UNAUTHORIZED, 'Author Id not Authorize');
+    throw new AppError(status.UNAUTHORIZED, 'Menu not found');
   }
-  payload.authorId = existMenu.author_id;
-  //   Calculate the total price into days
-  console.log(payload.orders);
+  payload.customerId = user.id;
+  payload.orderId = menuId;
+  // //   Calculate the total price into days
+  // console.log(payload.orders);
 
-  const existShop = await MealProvider.findOne({
-    authorShopId: existMenu.author_id,
+  // const existShop = await MealProvider.findOne({
+  //   shopId: existMenu.shopId,
+  // });
+  const isExistMealProvider = await MealProvider.findOne({
+    _id: existMenu.shopId,
   });
 
-  if (!existShop) {
-    throw new AppError(status.NOT_FOUND, 'Shop not found');
+  if (!isExistMealProvider) {
+    throw new AppError(status.NOT_FOUND, 'Meal Provider not found');
   }
-  payload.shopId = existShop._id;
+  payload.shopId = isExistMealProvider._id;
   const totalPrice = payload.orders.reduce((acc, day) => {
     const dayMealsTotal =
       day.meals?.reduce((mealAcc, meal) => mealAcc + (meal.price || 0), 0) || 0;
@@ -47,6 +53,7 @@ const createOrderIntoDB = async (
   const bigIntNumber = BigInt(digits);
   payload.transactionId = String(bigIntNumber);
   const res = await Order.create(payload);
+  console.log(res);
 
   let result;
   if (res) {
@@ -54,10 +61,12 @@ const createOrderIntoDB = async (
       total_amount: totalPrice,
       //  @ts-expect-error: tran_id is not defined in the type but is required for SSL services
       tran_id: bigIntNumber,
+      // tran_id: String(bigIntNumber),
     });
-
+    console.log('✅ SSLCommerz Payment URL:', result);
     result = { paymentUrl: result };
   }
+  console.log(result);
   return result; // Include total price in the response
 };
 

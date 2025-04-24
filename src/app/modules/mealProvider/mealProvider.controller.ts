@@ -38,7 +38,7 @@ const getMyMealProvider = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'My meal retrieved successfully',
+    message: 'My meal provider retrieved successfully',
     data: result,
   });
 });

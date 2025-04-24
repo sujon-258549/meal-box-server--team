@@ -4,15 +4,16 @@ import User from './user.model';
 import status from 'http-status';
 import AppError from '../../errors/AppError';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { generateUserId } from './user.utils';
 
 const createUserIntoDB = async (userData: TUser) => {
-  console.log('from service file', userData);
+  userData.id = await generateUserId();
   const newUser = await User.create(userData);
   return newUser;
 };
 
 const updateUserIntoDB = async (userData: Partial<TUser>, user: JwtPayload) => {
-  const updatedUser = await User.findByIdAndUpdate(user.id, userData, {
+  const updatedUser = await User.findOneAndUpdate({ id: user.id }, userData, {
     new: true,
     runValidators: true,
   });
@@ -28,19 +29,20 @@ const getMeFromDB = async (emailOrPhone: string, role: string) => {
   if (role === 'mealProvider') {
     result = await User.findOne({ email: emailOrPhone }).select('-password');
   }
+  if (role === 'admin') {
+    result = await User.findOne({ email: emailOrPhone }).select('-password');
+  }
 
   return result;
 };
 
-export const setImageIntoUser = async (
+const setImageIntoUser = async (
   file: Express.Multer.File,
   user: JwtPayload,
 ) => {
-  const { emailOrPhone } = user;
+  const { id } = user;
 
-  const isExistUser = await User.findOne({
-    $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
-  });
+  const isExistUser = await User.findOne({ id });
 
   if (!isExistUser) {
     return new AppError(status.NOT_FOUND, 'User not found');

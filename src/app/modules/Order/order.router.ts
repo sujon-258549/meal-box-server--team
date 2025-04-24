@@ -5,7 +5,7 @@ import auth from '../../middlewares/auth';
 const router = Router();
 
 router.post(
-  '/create-order/:id',
+  '/create-order/:menuId',
   auth('customer', 'mealProvider'),
   orderController.createOrder,
 );

@@ -12,22 +12,35 @@ router.post(
   auth('mealProvider'),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
+    console.log('req.body', req.body);
     req.body = JSON.parse(req.body.data);
     next();
   },
-  ValidateRequest(MenuValidations.menuValidationSchema),
+  ValidateRequest(MenuValidations.createMenuValidationSchema),
   MenuControllers.createMenuForDay,
 );
 
 router.get('/', MenuControllers.findAllMenu);
+
 router.get('/my-menu', auth('mealProvider'), MenuControllers.findMyMenu);
+
 router.get(
   '/:id',
   auth('mealProvider', 'customer'),
   MenuControllers.findSingleMenu,
 );
-router.get('/my-menu', auth('mealProvider'), MenuControllers.findMyMenu);
 
-router.put('/my-menu', auth('mealProvider'), MenuControllers.updateMyMenu);
+router.put(
+  '/update-menu',
+  auth('mealProvider'),
+  ValidateRequest(MenuValidations.updateMenuValidationSchema),
+  MenuControllers.updateMyMenu,
+);
+
+router.delete(
+  '/delete-menu/:id',
+  auth('mealProvider'),
+  MenuControllers.deleteMyMenu,
+);
 
 export const MenuRouters = router;

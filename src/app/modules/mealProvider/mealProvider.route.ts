@@ -15,7 +15,7 @@ router.post(
     req.body = JSON.parse(req.body.data);
     next();
   },
-  ValidateRequest(mealProviderValidations.mealProviderSchema),
+  ValidateRequest(mealProviderValidations.createMealProviderSchema),
   MealProviderControllers.createMealProvider,
 );
 
@@ -29,12 +29,12 @@ router.get(
 router.put(
   '/update-mealProvider',
   auth('mealProvider'),
-  //   ValidateRequest(mealProviderValidation.mealProviderSchema),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();
   },
+    ValidateRequest(mealProviderValidations.updateMealProviderSchema),
   MealProviderControllers.updateMealProvider,
 );
 // router.get('/menu', auth(UserRole.restaurant), restaurantController.findMyMenu);

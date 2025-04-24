@@ -3,6 +3,7 @@ import { Model, Types } from 'mongoose';
 export type TMealProvider = {
   shopName: string;
   shopAddress: string;
+  userId:string;
   authorShopId: Types.ObjectId;
   shopLogo?: string;
   phoneNumber: string;
