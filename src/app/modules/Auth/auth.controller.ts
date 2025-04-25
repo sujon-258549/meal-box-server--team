@@ -37,6 +37,16 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+// const forgetPassword = catchAsync(async (req: Request, res: Response) => {
+//   const { email } = req.body;
+//   const result = await AuthServices.forgetPasswordIntoDB(email);
+//   sendResponse(res, {
+//     statusCode: httpStatus.CREATED,
+//     success: true,
+//     message: 'Reset link is gangrened  successfully',
+//     data: result,
+//   });
+// });
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.body;
   const result = await AuthServices.forgetPasswordIntoDB(email);
@@ -72,6 +82,8 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+
 
 export const AuthControllers = {
   loginUser,

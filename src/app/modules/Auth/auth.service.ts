@@ -14,7 +14,7 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
   const user = await User.findOne({
     $or: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
   }).select('+password');
-  
+
   if (!user) {
     throw new AppError(status.NOT_FOUND, 'User not found!');
   }
@@ -38,7 +38,6 @@ const loginUserIntoDB = async (loginInfo: TLoginUser) => {
     role: user.role,
     id: user?.id,
   };
-  
 
   const accessToken = createToken(
     jwtPayload,
@@ -60,7 +59,6 @@ const refreshToken = async (token: string) => {
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { emailOrPhone } = decoded;
-  
 
   //check if user is exist
   const user = await User.findOne({
@@ -114,8 +112,7 @@ const refreshToken = async (token: string) => {
 
 // forget password
 const forgetPasswordIntoDB = async (email: number) => {
-  
-  const existEmail = await User.findOne({ email: email });
+  const existEmail = await User.findOne({ email: email }).select('+password');
   if (!existEmail) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User not found.');
   }
@@ -123,7 +120,7 @@ const forgetPasswordIntoDB = async (email: number) => {
   const JwtPayload = {
     email: existEmail.email,
     role: existEmail.role,
-    id: existEmail._id,
+    id: existEmail.id,
   };
   const accessToken = createToken(
     // @ts-expect-error token
@@ -133,41 +130,8 @@ const forgetPasswordIntoDB = async (email: number) => {
   );
 
   const resetUrlLink = `${config.RESET_UI_LINK}?email=${existEmail?.email}&token=${accessToken}`;
-  
+  console.log('resetUrlLink', resetUrlLink);
   sendEmail(existEmail.email, resetUrlLink);
-};
-// reset password
-const resetPasswordIntoDB = async (
-  payload: string,
-  data: { newPassword: string; email: string },
-) => {
-  let decoded;
-  try {
-    decoded = jwt.verify(
-      payload,
-      config.jwt_access_secret as string,
-    ) as JwtPayload;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (err) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
-  }
-  if (!decoded) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
-  }
-
-  const user = await User.findOne({ _id: decoded.id });
-  if (data.email != user?.email) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
-  }
-  
-  const hasPassword = await bcrypt.hash(data?.newPassword, 5);
-  const result = await User.findOneAndUpdate(
-    { email: user.email }, // ✅ this is correct for filtering by email
-    { password: hasPassword }, // ✅ new password to set
-    { new: true }, // ✅ optional: returns the updated document
-  );
-
-  return result;
 };
 
 // change password
@@ -176,8 +140,12 @@ const changePasswordIntoDB = async (
   payload: { oldPassword: string; newPassword: string },
   token: JwtPayload,
 ) => {
-  
-  const existEmail = await User.findOne({ email: token?.emailOrPhone });
+  console.log(token, 'token');
+  console.log(payload, 'payload');
+  const existEmail = await User.findOne({ email: token?.emailOrPhone }).select(
+    '+password',
+  );
+
   if (!existEmail) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'User not found.');
   }
@@ -193,6 +161,41 @@ const changePasswordIntoDB = async (
     { email: existEmail.email }, // ✅ this is correct for filtering by email
     { password: hasPassword }, // ✅ new password to set
     { new: true }, // ✅ optional: returns the updated document
+  );
+
+  return result;
+};
+
+// reset password
+const resetPasswordIntoDB = async (
+  payload: string,
+  data: { newPassword: string; email: string },
+) => {
+  console.log(data, 'data');
+  let decoded;
+  try {
+    decoded = jwt.verify(
+      payload,
+      config.jwt_access_secret as string,
+    ) as JwtPayload;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (err) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
+  }
+  if (!decoded) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
+  }
+
+  const user = await User.findOne({ id: decoded.id });
+  if (data.email != user?.email) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is not authorized');
+  }
+
+  const hasPassword = await bcrypt.hash(data?.newPassword, 5);
+  const result = await User.findOneAndUpdate(
+    { email: user.email },
+    { password: hasPassword },
+    { new: true },
   );
 
   return result;
