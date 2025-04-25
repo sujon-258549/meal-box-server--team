@@ -8,12 +8,17 @@ import status from 'http-status';
 import { searchableFields } from './menu.constant';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { MealProvider } from '../mealProvider/mealProvider.model';
+import User from '../User/user.model';
 
 const createMenuForDayInToDB = async (
   payload: TMenu,
   file: any,
   user: JwtPayload,
 ) => {
+  const isUserExist = await User.findOne({ id: user.id });
+  if (!isUserExist) {
+    throw new AppError(status.NOT_FOUND, 'User not found');
+  }
   const mealProvider = await MealProvider.findOne({
     userId: user.id,
   });
@@ -23,10 +28,8 @@ const createMenuForDayInToDB = async (
   }
 
   const existingMenu = await Menu.findOne({
-    author_id: mealProvider._id,
+    shopId: mealProvider._id,
   });
-
-  
 
   if (existingMenu) {
     throw new AppError(
@@ -48,8 +51,8 @@ const createMenuForDayInToDB = async (
     ...payload,
     menuImage: imageUrl?.secure_url,
     userId: user.id,
+    author_id: isUserExist._id,
     shopId: mealProvider._id,
-    author_id: mealProvider.authorShopId,
   };
 
   const result = await Menu.create(newMenuData);
@@ -75,21 +78,19 @@ const findAllMenuFromDB = async (
 };
 
 const findMyMenu = async (user: JwtPayload) => {
-  
   const isExistMealProvider = await MealProvider.findOne({
     userId: user.id,
   });
   if (!isExistMealProvider) {
     throw new AppError(status.NOT_FOUND, 'Meal provider not found');
   }
-  const result = await Menu.find({
+  const result = await Menu.findOne({
     userId: user.id,
     shopId: isExistMealProvider._id,
   })
     .populate('author_id')
     .populate('shopId');
 
-  
   return result;
 };
 
