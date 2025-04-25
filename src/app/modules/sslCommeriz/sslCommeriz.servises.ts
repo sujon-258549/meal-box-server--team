@@ -54,7 +54,7 @@ const insertPayment = async (paymentData: {
   try {
     // @ts-expect-error data
     const apiResponse = await sslcz.init(data);
-    console.log('API Response:', apiResponse); // Log the API response for debugging
+    // Log the API response for debugging
 
     // Redirect the user to the payment gateway
     const GatewayPageURL = apiResponse.GatewayPageURL;
