@@ -4,11 +4,10 @@ import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
 import { AuthServices } from './auth.service';
 import config from '../../config';
-import httpStatus from 'http-status';
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthServices.loginUserIntoDB(req.body);
   const { accessToken, refreshToken } = result;
- 
+
   res.cookie('refreshToken', refreshToken, {
     secure: config.NODE_ENV === 'production' ? true : false,
     httpOnly: true,
@@ -25,7 +24,6 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
 const refreshToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
-  
 
   const result = await AuthServices.refreshToken(refreshToken);
 
@@ -37,21 +35,11 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
-// const forgetPassword = catchAsync(async (req: Request, res: Response) => {
-//   const { email } = req.body;
-//   const result = await AuthServices.forgetPasswordIntoDB(email);
-//   sendResponse(res, {
-//     statusCode: httpStatus.CREATED,
-//     success: true,
-//     message: 'Reset link is gangrened  successfully',
-//     data: result,
-//   });
-// });
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.body;
   const result = await AuthServices.forgetPasswordIntoDB(email);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Reset link is gangrened  successfully',
     data: result,
@@ -65,7 +53,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
   }
   const result = await AuthServices.resetPasswordIntoDB(authorization, data);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Password reset  successfully',
     data: result,
@@ -76,14 +64,12 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   const token = req?.user;
   const result = await AuthServices.changePasswordIntoDB(body, token);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: status.CREATED,
     success: true,
     message: 'Password change  successfully',
     data: result,
   });
 });
-
-
 
 export const AuthControllers = {
   loginUser,

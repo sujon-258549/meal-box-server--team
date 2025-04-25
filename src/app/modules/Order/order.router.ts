@@ -6,7 +6,7 @@ const router = Router();
 
 router.post(
   '/create-order/:menuId',
-  auth('customer', 'mealProvider'),
+  auth('customer', 'mealProvider', 'admin'),
   orderController.createOrder,
 );
 

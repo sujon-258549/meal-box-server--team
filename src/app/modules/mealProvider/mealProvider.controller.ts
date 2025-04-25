@@ -7,7 +7,7 @@ import { MealProviderServices } from './mealProvider.service';
 
 const createMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
-  
+
   const result = await MealProviderServices.createMealProviderIntoDB(
     data,
     req.file,
@@ -36,7 +36,7 @@ const getMyMealProvider = catchAsync(async (req: Request, res: Response) => {
   const data = req?.user;
   const result = await MealProviderServices.getMyMealProviderIntoDB(data);
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: status.OK,
     success: true,
     message: 'My meal provider retrieved successfully',
     data: result,

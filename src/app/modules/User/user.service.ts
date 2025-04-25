@@ -71,23 +71,31 @@ const getAllUser = async (query: Record<string, unknown>) => {
   return { meta, data };
 };
 
-const changeUserStatus= async (id: string, statusUpdate: { isBlock?: boolean; isDelete?: boolean }) => {
-  const user = await User.findOne({_id: id });
+const changeUserStatus = async (
+  id: string,
+  statusUpdate: { isBlock?: boolean; isDelete?: boolean },
+) => {
+  const user = await User.findById(id);
   if (!user) {
-    return new AppError(status.NOT_FOUND, 'User not found');
-  }
-  // Update status fields only if they are passed
-  if (typeof statusUpdate.isBlock !== 'undefined') {
-    user.isBlock = statusUpdate.isBlock;
+    return {
+      success: false,
+      message: 'User not found',
+      user: null,
+    };
   }
 
-  if (typeof statusUpdate.isDelete !== 'undefined') {
+  // Apply updates based on flags
+  if (statusUpdate.isDelete !== undefined) {
     user.isDelete = statusUpdate.isDelete;
+  }
+
+  if (statusUpdate.isBlock !== undefined) {
+    user.isBlock = statusUpdate.isBlock;
   }
 
   await user.save();
   return user;
-}
+};
 
 export const UserServices = {
   createUserIntoDB,
@@ -95,5 +103,5 @@ export const UserServices = {
   getMeFromDB,
   setImageIntoUser,
   getAllUser,
-  changeUserStatus
+  changeUserStatus,
 };

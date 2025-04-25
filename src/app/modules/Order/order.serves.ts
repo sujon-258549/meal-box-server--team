@@ -7,20 +7,13 @@ import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
 import { MealProvider } from '../mealProvider/mealProvider.model';
-import { console } from 'inspector';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
   menuId: string,
 ) => {
-  // Assign user ID to the order
-  // payload.customerId = user.id;
-  // payload.orderId = menuId;
-  console.log('menuId:', menuId);
-
   const existMenu = await Menu.findById(menuId);
-  console.log(existMenu);
 
   if (!existMenu) {
     throw new AppError(status.UNAUTHORIZED, 'Menu not found');

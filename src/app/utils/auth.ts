@@ -5,7 +5,7 @@ import catchAsync from './catchAsync';
 import { JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 
-import httpStatus from 'http-status';
+import httpStatus, { status } from 'http-status';
 import { TUserRole } from '../modules/User/user.interface';
 import config from '../config';
 import AppError from '../errors/AppError';
@@ -25,7 +25,7 @@ const auth = (...requiredRole: TUserRole[]) => {
     const user = await User.isUserExistByCustomId(id);
 
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'Your User Id is Invalid!');
+      throw new AppError(status.NOT_FOUND, 'Your User Id is Invalid!');
     }
 
     if (requiredRole && !requiredRole?.includes(role)) {
@@ -41,4 +41,3 @@ const auth = (...requiredRole: TUserRole[]) => {
 };
 
 export default auth;
-

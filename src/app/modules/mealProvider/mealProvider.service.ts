@@ -22,11 +22,11 @@ const createMealProviderIntoDB = async (
     session.startTransaction();
 
     const isUserExist = await User.findOne({ id: user.id }).session(session);
-    
+
     if (!isUserExist) {
       throw new AppError(status.NOT_FOUND, 'User not found');
     }
-    
+
     if (isUserExist?.isShop) {
       throw new AppError(
         status.FORBIDDEN,
@@ -37,7 +37,6 @@ const createMealProviderIntoDB = async (
     const isMealProviderExist = await MealProvider.findOne({
       userId: user.id,
     }).session(session);
-    
 
     if (isMealProviderExist) {
       throw new AppError(status.CONFLICT, 'This user already shop create');
@@ -55,12 +54,9 @@ const createMealProviderIntoDB = async (
       payload.shopLogo = secure_url;
     }
 
-    
     payload.userId = user.id;
 
     payload.authorShopId = isUserExist._id;
-
-    
 
     const newMealProvider = await MealProvider.create([payload], { session });
     if (!newMealProvider.length) {

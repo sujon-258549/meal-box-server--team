@@ -5,9 +5,7 @@ import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
- 
   const result = await UserServices.createUserIntoDB(req.body);
-  
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -72,14 +70,31 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
 const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
   const { id, status } = req.body;
   const result = await UserServices.changeUserStatus(id, status);
+  let message = 'User status updated successfully';
+
+  if ('isBlock' in status) {
+    message = status.isBlock
+      ? 'User has been blocked'
+      : 'User has been unblocked';
+  }
+
+  if ('isDelete' in status) {
+    message = status.isDelete
+      ? 'User has been deleted'
+      : 'User has been restored';
+  }
+
+  // If both were provided, you can combine the messages
+  if ('isBlock' in status && 'isDelete' in status) {
+    message = `${status.isBlock ? 'Blocked' : 'Unblocked'} and ${status.isDelete ? 'deleted' : 'restored'} user successfully`;
+  }
   sendResponse(res, {
-    statusCode: status.OK,
+    statusCode: 200,
     success: true,
-    message: 'User status updated successfully',
-    // message: `${result.}`,
+    message,
     data: result,
   });
-})
+});
 
 export const UserControllers = {
   createUser,
@@ -87,5 +102,5 @@ export const UserControllers = {
   getMe,
   uploadImage,
   getAllUser,
-  changeUserStatus
+  changeUserStatus,
 };

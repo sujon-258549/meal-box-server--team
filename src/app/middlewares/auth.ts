@@ -16,7 +16,6 @@ const auth = (...requireRoles: TUserRole[]) => {
     if (!token) {
       throw new AppError(status.UNAUTHORIZED, 'You are not authorized');
     }
-
     //check if the token is valid
 
     const decoded = verifyToken(token, config.jwt_access_secret as string);

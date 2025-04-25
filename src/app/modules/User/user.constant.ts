@@ -4,8 +4,3 @@ export const USER_ROLE = {
   mealProvider: 'mealProvider',
 } as const;
 
-// export const UserRole = {
-//   user: 'customer',
-//   admin: 'admin',
-//   mealProvider: 'meal-provider',
-// } as const;
