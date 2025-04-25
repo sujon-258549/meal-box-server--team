@@ -7,20 +7,21 @@ import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
 import { MealProvider } from '../mealProvider/mealProvider.model';
+import { console } from 'inspector';
 
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
   menuId: string,
 ) => {
-  
-
   // Assign user ID to the order
   // payload.customerId = user.id;
   // payload.orderId = menuId;
-  
+  console.log('menuId:', menuId);
+
   const existMenu = await Menu.findById(menuId);
-  
+  console.log(existMenu);
+
   if (!existMenu) {
     throw new AppError(status.UNAUTHORIZED, 'Menu not found');
   }
@@ -40,7 +41,7 @@ const createOrderIntoDB = async (
       day.meals?.reduce((mealAcc, meal) => mealAcc + (meal.price || 0), 0) || 0;
     return acc + dayMealsTotal;
   }, 0);
-  
+
   payload.total_price = totalPrice;
   //   transition id
   const digits = Array.from({ length: 20 }, () =>
@@ -49,7 +50,6 @@ const createOrderIntoDB = async (
   const bigIntNumber = BigInt(digits);
   payload.transactionId = String(bigIntNumber);
   const res = await Order.create(payload);
-  
 
   let result;
   if (res) {
@@ -59,10 +59,10 @@ const createOrderIntoDB = async (
       tran_id: bigIntNumber,
       // tran_id: String(bigIntNumber),
     });
-    
+
     result = { paymentUrl: result };
   }
-  
+
   return result; // Include total price in the response
 };
 
@@ -93,7 +93,6 @@ const findMyOrderIntoDB = async (
 };
 
 const getSingleOrderFromDB = async (userInfo: JwtPayload, orderId: string) => {
- 
   const res = await Order.findOne({ _id: orderId })
     // .populate('customerId')
     .populate({
@@ -106,7 +105,7 @@ const getSingleOrderFromDB = async (userInfo: JwtPayload, orderId: string) => {
     .populate('orderId')
     // .populate('authorId')
     .populate('shopId');
-  
+
   return res;
 };
 
