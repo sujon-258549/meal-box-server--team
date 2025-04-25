@@ -28,7 +28,7 @@ router.get(
 
 router.post(
   '/upload',
-  auth('customer', 'mealProvider'),
+  auth('customer', 'mealProvider', 'admin'),
   upload.single('file'),
   UserControllers.uploadImage,
 );
