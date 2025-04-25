@@ -10,12 +10,12 @@ const providerSchema = new Schema<TMealProvider>({
     required: true,
     unique: true,
     ref: 'User',
-  }, //will be added service file
+  },
   shopAddress: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   customerServiceContact: { type: String },
   website: { type: String },
-  establishedYear: { type: Number, required: true }, //will be change here
+  establishedYear: { type: Number, required: true },
   socialMediaLinks: {
     facebook: { type: String },
     instagram: { type: String },
@@ -31,7 +31,6 @@ const providerSchema = new Schema<TMealProvider>({
   productCategories: { type: [String], required: true },
   shopLogo: { type: String },
 
-  // rating: { type: Number },
   isActive: { type: Boolean, default: true },
 });
 
