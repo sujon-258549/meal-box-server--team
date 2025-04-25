@@ -47,7 +47,18 @@ const updateUserValidationSchema = z.object({
   }),
 });
 
+const changeUserStatusSchema = z.object({
+  body: z.object({
+    id: z.string().min(1, 'User ID is required'),
+    status: z.object({
+      isBlock: z.boolean().optional(),
+      isDelete: z.boolean().optional(),
+    }),
+  }),
+});
+
 export const UserValidations = {
   createUserValidationSchema,
   updateUserValidationSchema,
+  changeUserStatusSchema,
 };

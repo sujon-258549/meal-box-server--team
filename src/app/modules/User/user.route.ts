@@ -33,4 +33,13 @@ router.post(
   UserControllers.uploadImage,
 );
 
+router.get('/', auth('admin'), UserControllers.getAllUser);
+
+router.put(
+  '/change-user-status',
+  auth('admin'),
+  ValidateRequest(UserValidations.changeUserStatusSchema),
+  UserControllers.changeUserStatus,
+);
+
 export const UserRoutes = router;

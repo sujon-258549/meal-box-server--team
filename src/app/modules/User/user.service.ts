@@ -5,6 +5,7 @@ import status from 'http-status';
 import AppError from '../../errors/AppError';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { generateUserId } from './user.utils';
+import queryBuilder from '../../builder/queryBuilder';
 
 const createUserIntoDB = async (userData: TUser) => {
   userData.id = await generateUserId();
@@ -40,7 +41,6 @@ const setImageIntoUser = async (
   file: Express.Multer.File,
   user: JwtPayload,
 ) => {
-  
   const { id } = user;
 
   const isExistUser = await User.findOne({ id });
@@ -64,9 +64,36 @@ const setImageIntoUser = async (
   return isExistUser;
 };
 
+const getAllUser = async (query: Record<string, unknown>) => {
+  const user = new queryBuilder(User.find(), query);
+  const meta = await user.countTotal();
+  const data = await user.modelQuery;
+  return { meta, data };
+};
+
+const changeUserStatus= async (id: string, statusUpdate: { isBlock?: boolean; isDelete?: boolean }) => {
+  const user = await User.findOne({_id: id });
+  if (!user) {
+    return new AppError(status.NOT_FOUND, 'User not found');
+  }
+  // Update status fields only if they are passed
+  if (typeof statusUpdate.isBlock !== 'undefined') {
+    user.isBlock = statusUpdate.isBlock;
+  }
+
+  if (typeof statusUpdate.isDelete !== 'undefined') {
+    user.isDelete = statusUpdate.isDelete;
+  }
+
+  await user.save();
+  return user;
+}
+
 export const UserServices = {
   createUserIntoDB,
   updateUserIntoDB,
   getMeFromDB,
   setImageIntoUser,
+  getAllUser,
+  changeUserStatus
 };

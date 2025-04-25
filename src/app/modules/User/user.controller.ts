@@ -58,9 +58,34 @@ const uploadImage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.getAllUser(req.query);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'All User Retrieved successfully',
+    data: result,
+  });
+});
+
+const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id, status } = req.body;
+  const result = await UserServices.changeUserStatus(id, status);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'User status updated successfully',
+    // message: `${result.}`,
+    data: result,
+  });
+})
+
 export const UserControllers = {
   createUser,
   updateUser,
   getMe,
   uploadImage,
+  getAllUser,
+  changeUserStatus
 };
