@@ -9,6 +9,15 @@ import queryBuilder from '../../builder/queryBuilder';
 
 const createUserIntoDB = async (userData: TUser) => {
   userData.id = await generateUserId();
+  const existMobile = await User.findOne({ phoneNumber: userData.phoneNumber });
+  if (existMobile) {
+    throw new AppError(409, 'Mobile number already exists');
+  }
+  const existEmail = await User.findOne({ email: userData.email });
+  if (existEmail) {
+    throw new AppError(409, 'Email already exists');
+  }
+
   const newUser = await User.create(userData);
   return newUser;
 };

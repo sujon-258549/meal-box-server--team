@@ -12,6 +12,7 @@ const providerSchema = new Schema<TMealProvider>({
     ref: 'User',
   },
   shopAddress: { type: String, required: true },
+  description: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   customerServiceContact: { type: String },
   website: { type: String },
@@ -29,6 +30,7 @@ const providerSchema = new Schema<TMealProvider>({
   },
   paymentMethods: { type: [String], required: true },
   productCategories: { type: [String], required: true },
+  shopFeatures: { type: [String], required: true },
   shopLogo: { type: String },
 
   isActive: { type: Boolean, default: true },

@@ -28,8 +28,9 @@ const getAllMealProvider = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Meal retrieved successfully',
-    data: result,
+    message: 'Meal Provider retrieved successfully',
+    meta: result.meta,
+    data: result.data,
   });
 });
 const getMyMealProvider = catchAsync(async (req: Request, res: Response) => {

@@ -104,7 +104,11 @@ const findMyMenu = async (user: JwtPayload) => {
 };
 
 const findSingleMenu = async (id: string) => {
-  const result = await Menu.findById(id)
+  const existAuthorId = await Menu.findOne({ shopId: id });
+  if (!existAuthorId) {
+    throw new AppError(501, 'Meal Provider Not Create Menu');
+  }
+  const result = await Menu.findOne({ $or: [{ _id: id }, { shopId: id }] })
     .populate('author_id')
     .populate('shopId');
   return result;

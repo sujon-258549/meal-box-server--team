@@ -3,6 +3,7 @@ import { Model, Types } from 'mongoose';
 export type TMealProvider = {
   shopName: string;
   shopAddress: string;
+  description: string;
   userId: string;
   authorShopId: Types.ObjectId;
   shopLogo?: string;
@@ -11,6 +12,7 @@ export type TMealProvider = {
   ownerName: string;
   establishedYear: number;
   productCategories: string[];
+  shopFeatures: string[];
   socialMediaLinks?: {
     facebook?: string;
     instagram?: string;

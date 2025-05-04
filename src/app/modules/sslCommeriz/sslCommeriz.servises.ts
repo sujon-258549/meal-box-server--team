@@ -18,7 +18,7 @@ const insertPayment = async (paymentData: {
     total_amount: total_amount, // ✅ number
     currency: 'BDT', // ✅ string
     tran_id: String(tran_id), // ✅ ensure it's a string
-    success_url: `${config.SUCCESS_URL}?tran_id=${tran_id}`,
+    success_url: `${config.VALIDATION_URL}?tran_id=${tran_id}`,
     fail_url: config.FAIL_URL,
     cancel_url: config.CANCEL_URL,
     ipn_url: 'http://localhost:3030/ipn',

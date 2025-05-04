@@ -78,14 +78,17 @@ const createMealProviderIntoDB = async (
 };
 
 const getAllMealProviderIntoDB = async (query: Record<string, unknown>) => {
-  const mealProvider = new queryBuilder(
+  const result = new queryBuilder(
     MealProvider.find().populate('authorShopId'),
     query,
-  );
-  const meta = await mealProvider.countTotal();
-  const data = await mealProvider.modelQuery;
-
-  return { data, meta };
+  )
+    .filter()
+    .paginate()
+    .sort()
+    .fields();
+  const meta = await result.countTotal();
+  const data = await result.modelQuery;
+  return { meta, data };
 };
 
 const getMyMealProviderIntoDB = async (user: JwtPayload) => {
