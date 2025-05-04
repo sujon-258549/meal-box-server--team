@@ -15,6 +15,7 @@ export interface TMenu {
   meals: IDayMenu[];
   userId: string;
   author_id: Types.ObjectId;
+  totalPrice: number;
   shopId: Types.ObjectId;
   menuImage: string;
 }

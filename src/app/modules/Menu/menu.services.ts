@@ -47,6 +47,15 @@ const createMenuForDayInToDB = async (
     secure_url: string;
   };
 
+  const totalPrice = payload.meals.reduce((acc, day) => {
+    const { morning, evening, night } = day;
+    const dayMealsTotalPrice =
+      (morning?.price || 0) + (evening?.price || 0) + (night?.price || 0);
+    return acc + dayMealsTotalPrice;
+  }, 0);
+
+  payload.totalPrice = Number(totalPrice);
+
   const newMenuData = {
     ...payload,
     menuImage: imageUrl?.secure_url,

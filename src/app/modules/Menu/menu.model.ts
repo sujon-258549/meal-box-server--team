@@ -23,6 +23,7 @@ const MenuSchema = new Schema<TMenu>(
       ref: 'MealProvider',
     },
     menuImage: { type: String, required: true },
+    totalPrice: { type: Number, required: true },
     meals: { type: [DayMenuSchema], required: true },
   },
   { timestamps: true },
