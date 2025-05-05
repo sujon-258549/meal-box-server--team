@@ -14,7 +14,7 @@ app.use(
   cors({
     origin: [
       'https://meal-box-team-client.vercel.app',
-      // 'https://stationary-client-psi.vercel.app',
+      'http://localhost:3000',
     ],
     credentials: true,
   }),

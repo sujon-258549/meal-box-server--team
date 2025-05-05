@@ -33,7 +33,7 @@ router.post(
   UserControllers.uploadImage,
 );
 
-router.get('/', auth('admin'), UserControllers.getAllUser);
+router.get('/', UserControllers.getAllUser);
 
 router.put(
   '/change-user-status',

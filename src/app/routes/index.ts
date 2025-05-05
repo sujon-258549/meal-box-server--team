@@ -5,6 +5,8 @@ import { MenuRouters } from '../modules/Menu/menu.router';
 import { SSLRoutes } from '../modules/sslCommeriz/sslCommeriz.router';
 import { orderRouter } from '../modules/Order/order.router';
 import { MealProviderRouters } from '../modules/mealProvider/mealProvider.route';
+import { contactRouter } from '../modules/contactUs/contactUs.router';
+import { blogRouter } from '../../app/modules/blog/blog.router';
 
 const router = Router();
 
@@ -36,6 +38,14 @@ const routerModules = [
   {
     path: '/order',
     route: orderRouter,
+  },
+  {
+    path: '/contact',
+    route: contactRouter,
+  },
+  {
+    path: '/blog',
+    route: blogRouter,
   },
 ];
 

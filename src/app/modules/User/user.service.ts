@@ -74,7 +74,10 @@ const setImageIntoUser = async (
 };
 
 const getAllUser = async (query: Record<string, unknown>) => {
-  const user = new queryBuilder(User.find(), query);
+  const user = new queryBuilder(User.find(), query)
+    .paginate()
+    .filter()
+    .fields();
   const meta = await user.countTotal();
   const data = await user.modelQuery;
   return { meta, data };
