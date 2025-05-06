@@ -12,10 +12,7 @@ app.use(cookieParser());
 // app.use(cors());
 app.use(
   cors({
-    origin: [
-      'https://meal-box-team-client.vercel.app',
-      'http://localhost:3000',
-    ],
+    origin: ['https://meal-box-client-2.vercel.app', 'http://localhost:3000'],
     credentials: true,
   }),
 );
