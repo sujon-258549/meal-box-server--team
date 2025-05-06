@@ -8,6 +8,7 @@ import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
 import { MealProvider } from '../mealProvider/mealProvider.model';
 
+const searchParams = ['shopId.shopName', 'paymentStatus'];
 const createOrderIntoDB = async (
   payload: TOrderMenu,
   user: JwtPayload,
@@ -76,6 +77,7 @@ const findMyOrderIntoDB = async (
       .populate('shopId'),
     query,
   )
+    .search(searchParams)
     .sort()
     .filter()
     .paginate()
