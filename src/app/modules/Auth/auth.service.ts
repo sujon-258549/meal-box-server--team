@@ -89,6 +89,7 @@ const refreshToken = async (token: string) => {
 // forget password
 const forgetPasswordIntoDB = async (email: number) => {
   const existEmail = await User.findOne({ email: email }).select('+password');
+  console.log(existEmail);
   if (!existEmail) {
     throw new AppError(status.UNAUTHORIZED, 'User not found.');
   }

@@ -4,7 +4,7 @@ import { MealProviderModel, TMealProvider } from './mealProvider.interface';
 const providerSchema = new Schema<TMealProvider>({
   shopName: { type: String, required: true },
   ownerName: { type: String, required: true },
-  userId: { type: String, required: true },
+  userId: { type: String },
   authorShopId: {
     type: Schema.Types.ObjectId,
     required: true,

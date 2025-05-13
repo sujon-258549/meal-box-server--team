@@ -33,7 +33,17 @@ router.post(
   UserControllers.uploadImage,
 );
 
-router.get('/', UserControllers.getAllUser);
+router.get(
+  '/meal-provider',
+  auth('admin'),
+  UserControllers.getAllAllMealProvider,
+);
+router.get(
+  '/user-meal-provider',
+  auth('admin'),
+  UserControllers.getAllUserAndMealProvider,
+);
+router.get('/', auth('admin'), UserControllers.getAllUser);
 
 router.put(
   '/change-user-status',

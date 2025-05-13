@@ -56,16 +56,42 @@ const uploadImage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllUserAndMealProvider = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await UserServices.getAllUserAndMealProvider();
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'All User and Meal Provider Retrieved successfully',
+      data: result,
+    });
+  },
+);
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.query);
   const result = await UserServices.getAllUser(req.query);
 
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
     message: 'All User Retrieved successfully',
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
+const getAllAllMealProvider = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await UserServices.getAllMealProvider(req.query);
+
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: 'All Meal Provider Retrieved successfully',
+      data: result.data,
+      meta: result.meta,
+    });
+  },
+);
 
 const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
   const { id, status } = req.body;
@@ -103,4 +129,6 @@ export const UserControllers = {
   uploadImage,
   getAllUser,
   changeUserStatus,
+  getAllAllMealProvider,
+  getAllUserAndMealProvider,
 };

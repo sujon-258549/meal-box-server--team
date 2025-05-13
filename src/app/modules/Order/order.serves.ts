@@ -7,6 +7,7 @@ import { sslServices } from '../sslCommeriz/sslCommeriz.servises';
 import { Menu } from '../Menu/menu.model';
 import queryBuilder from '../../builder/queryBuilder';
 import { MealProvider } from '../mealProvider/mealProvider.model';
+import User from '../User/user.model';
 
 const searchParams = ['shopId.shopName', 'paymentStatus'];
 const createOrderIntoDB = async (
@@ -19,7 +20,12 @@ const createOrderIntoDB = async (
   if (!existMenu) {
     throw new AppError(status.UNAUTHORIZED, 'Menu not found');
   }
-  payload.customerId = user.id;
+  const existUser = await User.findOne({ id: user.id });
+
+  if (!existUser) {
+    throw new AppError(status.UNAUTHORIZED, 'Menu not found');
+  }
+  payload.customerId = existUser._id.toString();
   payload.orderId = menuId;
 
   const isExistMealProvider = await MealProvider.findOne({
@@ -64,8 +70,12 @@ const findMyOrderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
+  const existUser = await User.findOne({ id: user?.id });
+  if (!existUser) {
+    throw new AppError(status.NOT_FOUND, 'Shop not found');
+  }
   const myOrder = new queryBuilder(
-    Order.find({ customerId: user.id })
+    Order.find({ customerId: existUser._id })
       .populate({
         path: 'customerId',
         model: 'User',
@@ -98,7 +108,6 @@ const getSingleOrderFromDB = async (userInfo: JwtPayload, orderId: string) => {
       select: '',
     })
     .populate('orderId')
-    // .populate('authorId')
     .populate('shopId');
 
   return res;
@@ -108,13 +117,22 @@ const MealProviderIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
+  const existUser = await User.findOne({ id: user?.id });
+  if (!existUser) {
+    throw new AppError(status.NOT_FOUND, 'Shop not found');
+  }
+  const existShop = await MealProvider.findOne({
+    authorShopId: existUser?._id,
+  });
+  console.log('..................................', existShop, user.id);
+  if (!existShop) {
+    throw new AppError(status.NOT_FOUND, 'Meal Provider not found');
+  }
   const meal = new queryBuilder(
-    Order.find({ authorId: user.id })
+    Order.find({ shopId: existShop._id })
       .populate('customerId')
       .populate('orderId')
-      .populate('authorId')
       .populate('shopId'),
-
     query,
   )
     .sort()
@@ -125,10 +143,15 @@ const MealProviderIntoDB = async (
   const data = await meal.modelQuery;
   return { meta, data };
 };
+const allOrderIntoDB = async () => {
+  const result = Order.find();
+  return result;
+};
 
 export const orderServes = {
   createOrderIntoDB,
   findMyOrderIntoDB,
   MealProviderIntoDB,
   getSingleOrderFromDB,
+  allOrderIntoDB,
 };

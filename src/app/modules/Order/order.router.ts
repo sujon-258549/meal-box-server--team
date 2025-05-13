@@ -15,6 +15,7 @@ router.get(
   auth('customer', 'mealProvider'),
   orderController.findMyOrder,
 );
+router.get('/all-order', auth('admin'), orderController.findAllOrder);
 //get single order
 router.get(
   '/:id',

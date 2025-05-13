@@ -73,8 +73,23 @@ const setImageIntoUser = async (
   return isExistUser;
 };
 
+const getAllUserAndMealProvider = async () => {
+  const result = User.find();
+  return result;
+};
 const getAllUser = async (query: Record<string, unknown>) => {
-  const user = new queryBuilder(User.find(), query)
+  console.log(query);
+  const user = new queryBuilder(User.find({ role: 'customer' }), query)
+    .paginate()
+    .filter()
+    .fields();
+  const meta = await user.countTotal();
+  const data = await user.modelQuery;
+  return { meta, data };
+};
+const getAllMealProvider = async (query: Record<string, unknown>) => {
+  console.log(query);
+  const user = new queryBuilder(User.find({ role: 'mealProvider' }), query)
     .paginate()
     .filter()
     .fields();
@@ -116,4 +131,6 @@ export const UserServices = {
   setImageIntoUser,
   getAllUser,
   changeUserStatus,
+  getAllMealProvider,
+  getAllUserAndMealProvider,
 };
