@@ -38,12 +38,12 @@ const myBlogIntoDB = async (
   user: JwtPayload,
   query: Record<string, unknown>,
 ) => {
-  console.log(user);
-  console.log(user.id);
+  console.log('......................................', query, user);
   const newUser = new queryBuilder(
     BlogPost.find({ id: user.id }).populate('authorId'),
     query,
   )
+    .paginate()
     .sort()
     .fields()
     .filter();
@@ -57,7 +57,8 @@ const allBlogIntoDB = async (query: Record<string, unknown>) => {
   const newUser = new queryBuilder(BlogPost.find().populate('authorId'), query)
     .sort()
     .fields()
-    .filter();
+    .filter()
+    .paginate();
   const meta = await newUser.countTotal();
   const data = await newUser.modelQuery;
 
