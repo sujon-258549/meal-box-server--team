@@ -38,11 +38,7 @@ router.get(
   auth('admin'),
   UserControllers.getAllAllMealProvider,
 );
-router.get(
-  '/user-meal-provider',
-  auth('admin'),
-  UserControllers.getAllUserAndMealProvider,
-);
+router.get('/user-meal-provider', UserControllers.getAllUserAndMealProvider);
 router.get('/', auth('admin'), UserControllers.getAllUser);
 
 router.put(
