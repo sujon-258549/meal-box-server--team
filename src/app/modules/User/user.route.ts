@@ -32,7 +32,7 @@ router.post(
   upload.single('file'),
   UserControllers.uploadImage,
 );
-
+// get route
 router.get(
   '/meal-provider',
   auth('admin'),
